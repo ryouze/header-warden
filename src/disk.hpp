@@ -43,7 +43,6 @@ class Line {
      *
      * @return Line number (e.g., "20").
      */
-
     [[nodiscard]] std::size_t get_number() const;
 
     /**
