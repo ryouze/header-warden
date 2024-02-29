@@ -2,6 +2,10 @@
 
 header-warden is a command-line tool that identifies and reports missing standard library headers in your C++ code.
 
+![Knight surrounded by floating source code](/assets/warden.jpeg)
+
+Image generated using OpenAI's [DALL-E 3](https://openai.com/dall-e-3).
+
 
 ## Motivation
 
