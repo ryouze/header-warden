@@ -41,40 +41,39 @@ Line::Line(const std::size_t line_number,
            const std::string &line_text)
     : number_(line_number), text_(line_text), type_(LineType::EMPTY)
 {
-    // Do not process empty lines, skip all checks for improved performance
-    if (!line_text.empty()) {
-        // Do not process lines that start with "*" or "//", optionally preceded by whitespace
-        if (!this->contains_regex(std::regex(R"(^\s*\*)")) && !this->contains_regex(std::regex(R"(^\s*//.*)"))) {
-            // Extract all standard library functions used in the line
-            this->functions_ = this->get_all_regex_matches(
-                // Match lines containing standard library functions (e.g., "size_t" from "std::size_t", "getline" from "std::getline")
-                std::regex(R"(std::(\w+))"),
-                // Get the first capture group, which is the function name
-                1);
-            // Extract the library name from the include directive in the line
-            this->include_ = this->get_first_regex_match(
-                // Match lines starting with #include, with any number of spaces (including zero spaces) before it (e.g., "string" from "#include <string>")
-                std::regex(R"(^\s*?#include.?<(\S+)>)"),
-                // Get the first capture group, which is the library name
-                1);
-            // If the line contains an include directive
-            if (!this->include_.empty()) {
-                // If it also contains standard library functions, classify it as an include line with functions
-                if (!this->functions_.empty()) {
-                    this->type_ = LineType::INCLUDE_WITH_FUNCTION;
-                }
-                // Otherwise, classify it as an include line
-                else {
-                    this->type_ = LineType::BARE_INCLUDE;
-                }
-            }
-            // If the line contains standard library functions, classify it as a function line
-            else if (!this->functions_.empty()) {
-                this->type_ = LineType::FUNCTION;
-            }
-            // For lines without an include directive or standard library functions, use the default type (EMPTY) set in the initializer list
+    // Ignore empty lines
+    if (this->text_.empty()) {
+        return;
+    }
+    // Ignore comments (line starts with "*" or "//", optionally preceded by whitespace)
+    if (this->contains_regex(std::regex(R"(^\s*\*)")) || this->contains_regex(std::regex(R"(^\s*//.*)"))) {
+        return;
+    }
+    // Extract all standard library functions used in the line
+    this->functions_ = this->get_all_regex_matches(
+        std::regex(R"(std::(\w+))"),  // Match standard library functions
+        1);                           // First capture group (e.g., "string" from "std::string")
+    // Extract the header name from the include directive in the line
+    this->include_ = this->get_first_regex_match(
+        std::regex(R"(^\s*?#include.?<(\S+)>)"),  // Match include directives
+        1);                                       // First capture group (e.g., "iostream" from "#include <iostream>")
+    // Classify the line based on its content
+    if (!this->include_.empty()) {
+        // If the line contains an include directive...
+        if (!this->functions_.empty()) {
+            // ...and also contains standard library functions, classify it as an include line with functions
+            this->type_ = LineType::INCLUDE_WITH_FUNCTION;
+        }
+        else {
+            // ...and does not contain standard library functions, classify it as an include line
+            this->type_ = LineType::BARE_INCLUDE;
         }
     }
+    else if (!this->functions_.empty()) {
+        // If the line does not contain an include directive but contains standard library functions, classify it as a function line
+        this->type_ = LineType::FUNCTION;
+    }
+    // If the line does not contain an include directive or standard library functions, it remains with the default type (EMPTY)
 }
 
 std::size_t Line::get_number() const
