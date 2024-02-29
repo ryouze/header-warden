@@ -1,4 +1,4 @@
-#include "net.hpp"  // for net::create_cpp_reference_link
+#include "net.hpp"
 
 #include <string>  // for std::string
 

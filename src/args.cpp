@@ -1,4 +1,4 @@
-#include "args.hpp"  // for args::ArgParser
+#include "args.hpp"
 
 #include <algorithm>  // for std::find, std::copy_if
 #include <iterator>   // for std::back_inserter

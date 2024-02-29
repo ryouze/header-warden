@@ -1,4 +1,4 @@
-#include "disk.hpp"  // for disk::LineType, disk::Line, disk::File
+#include "disk.hpp"
 
 #include <algorithm>  // for std::transform
 #include <cctype>     // for std::tolower
