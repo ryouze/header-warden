@@ -70,39 +70,24 @@ Line::Line(const std::size_t line_number,
     if (this->contains_regex(std::regex(R"(^\s*\*)")) || this->contains_regex(std::regex(R"(^\s*//.*)"))) {
         return;
     }
-    // Extract the header name from the include directive in the line
-    this->include_ = this->get_first_regex_match(
-        std::regex(R"(^\s*?#include.?<(\S+)>)"),  // Match include directives
-        1);                                       // First capture group (e.g., "iostream" from "#include <iostream>")
-    // If the line contains an include directive, we cannot remove comments from it when running get_all_regex_matches, because we need to get the listed functions after the include directive, e.g., "#include <iostream> // for std::cout, for std::cerr"
-    // If it does not contain an include directive, we can remove comments, because they will only trigger false positives when running get_all_regex_matches, e.g., "int x = 5 // use std::cout to print x to the console"
+    // Extract header name from include directive, if present
+    this->include_ = this->get_first_regex_match(std::regex(R"(^\s*?#include.?<(\S+)>)"), 1);
     const bool line_contains_include = !this->include_.empty();
     // Extract all standard library functions used in the line
-    // If we have an include directive, we cannot remove comments from the line, because we need to get the listed functions after the include directive
-    // Otherwise, remove it to prevent false positives
-    this->functions_ = this->get_all_regex_matches(
-        std::regex(R"(std::(\w+))"),  // Match standard library functions
-        1,                            // First capture group (e.g., "string" from "std::string")
-        !line_contains_include);      // Remove comments: if true, remove comments before checking for match
+    // If line contains include directive, comments are not removed to preserve functions listed after the directive
+    // E.g., "#include <iostream> // for std::cout, for std::cerr"
+    // If line does not contain include directive, comments are removed to prevent false positives
+    // E.g., "int x = 5 // use std::cout to print x to the console"
+    this->functions_ = this->get_all_regex_matches(std::regex(R"(std::(\w+))"), 1, !line_contains_include);
     const bool line_contains_functions = !this->functions_.empty();
     // Classify the line based on its content
-    // If the line contains an include directive...
     if (line_contains_include) {
-        // ...and also contains standard library functions, classify it as an include line with functions
-        if (line_contains_functions) {
-            this->type_ = LineType::INCLUDE_WITH_FUNCTION;
-        }
-        // ...and does not contain standard library functions, classify it as an include line
-        else {
-
-            this->type_ = LineType::BARE_INCLUDE;
-        }
+        this->type_ = line_contains_functions ? LineType::INCLUDE_WITH_FUNCTION : LineType::BARE_INCLUDE;
     }
-    // If the line does not contain an include directive but contains standard library functions, classify it as a function line
     else if (line_contains_functions) {
         this->type_ = LineType::FUNCTION;
     }
-    // If the line does not contain an include directive or standard library functions, it remains with the default type (EMPTY)
+    // If no include directive or functions, line remains with default type (EMPTY)
 }
 
 std::size_t Line::get_number() const
