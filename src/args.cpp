@@ -67,11 +67,12 @@ std::vector<std::string> ArgParser::get_positional_arguments() const
 {
     std::vector<std::string> positional_args;
     // Use std::copy_if to copy arguments that do not begin with "-" or "--"
-    std::copy_if(this->args_.begin(), this->args_.end(), std::back_inserter(positional_args),
+    std::copy_if(this->args_.cbegin(), this->args_.cend(), std::back_inserter(positional_args),
                  [](const std::string &arg) {
                      // Check if the argument does not start with "-" and does not start with "--"
                      return arg.empty() || (arg[0] != '-' && (arg.size() <= 1 || arg[1] != '-'));
                  });
+    positional_args.shrink_to_fit();
     return positional_args;
 }
 
