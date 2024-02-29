@@ -4,7 +4,7 @@
 
 namespace net {
 
-std::string create_cpp_reference_link(const std::string &name)
+[[nodiscard]] std::string create_cpp_reference_link(const std::string &name)
 {
     // Initialize the link with the base URL for the DuckDuckGo search
     std::string link = "https://duckduckgo.com/?sites=cppreference.com&q=";
