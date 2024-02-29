@@ -14,7 +14,8 @@ def foo(bar: typing.List[int]) -> None:
     pass
 ```
 
-> Note: In [Python >3.9](https://docs.python.org/3/whatsnew/3.9.html#type-hinting-generics-in-standard-collections), `list[]` can be used directly without using `typing.List`. This is merely for illustration purposes.
+**Note:** In [Python >3.9](https://docs.python.org/3/whatsnew/3.9.html#type-hinting-generics-in-standard-collections), `list[]` can be used directly without using `typing.List`. This is merely for illustration purposes.
+
 
 However, in C++, it is possible to use a standard library function without including the corresponding header. This is because they all share the `std` namespace.
 
@@ -65,7 +66,7 @@ After running header-warden, you will receive a report that lists all standard l
 -> Reference: https://duckduckgo.com/?sites=cppreference.com&q=std%3A%3Avector&ia=web
 ```
 
-> NOTE: The program ignores lines starting with `//`, but does not ignore multiline comments due to its line-by-line design.
+**Note:** The program ignores lines starting with `//`, but does not ignore multiline comments due to its line-by-line design.
 
 
 ## Features
