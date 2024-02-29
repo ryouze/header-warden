@@ -81,31 +81,6 @@ class Line {
 
   private:
     /**
-     * @brief Line number (e.g., "20").
-     */
-    const std::size_t number_;
-
-    /**
-     * @brief Line text (e.g., "hello").
-     */
-    const std::string text_;
-
-    /**
-     * @brief Line type (e.g., "BARE_INCLUDE").
-     */
-    LineType type_;
-
-    /**
-     * @brief Standard library functions (e.g., {"cout", "cerr"}).
-     */
-    std::vector<std::string> functions_;
-
-    /**
-     * @brief Library name (e.g., "iostream").
-     */
-    std::string include_;
-
-    /**
      * @brief Check if the line contains a given regular expression pattern.
      *
      * @param regex_pattern Regular expression pattern to search for (e.g., "he.*o").
@@ -135,6 +110,31 @@ class Line {
      */
     [[nodiscard]] std::vector<std::string> get_all_regex_matches(const std::regex &regex_pattern,
                                                                  const std::size_t capture_group = 0) const;
+
+    /**
+     * @brief Line number (e.g., "20").
+     */
+    const std::size_t number_;
+
+    /**
+     * @brief Line text (e.g., "hello").
+     */
+    const std::string text_;
+
+    /**
+     * @brief Line type (e.g., "BARE_INCLUDE").
+     */
+    LineType type_;
+
+    /**
+     * @brief Standard library functions (e.g., {"cout", "cerr"}).
+     */
+    std::vector<std::string> functions_;
+
+    /**
+     * @brief Library name (e.g., "iostream").
+     */
+    std::string include_;
 };
 
 /**
