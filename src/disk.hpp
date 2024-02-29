@@ -105,11 +105,13 @@ class Line {
      *
      * @param regex_pattern Regular expression pattern to search for (e.g., "he(.*)o").
      * @param capture_group Capture group to be used. If set to "0", the entire matched string is returned. If set to "1", the first capture group is returned. Defaults to "0".
+     * @param remove_comments Whether to remove comments before checking for matches. The original string is not modified. If set to "true", comments are removed before checking for matches. If set to "false", comments are left in the source code. Defaults to "true".
      *
      * @return All matches for the given regex pattern and capture group (e.g., {"ll", "a"}). If no matches are found, an empty vector is returned.
      */
     [[nodiscard]] std::vector<std::string> get_all_regex_matches(const std::regex &regex_pattern,
-                                                                 const std::size_t capture_group = 0) const;
+                                                                 const std::size_t capture_group = 0,
+                                                                 const bool remove_comments = true) const;
 
     /**
      * @brief Line number (e.g., "20").

@@ -16,6 +16,27 @@ namespace disk {
 namespace {
 
 /**
+ * @brief Remove comments from a string.
+ *
+ * This is a helper function that is not available outside this file.
+ *
+ * @param str String from which to remove comments (e.g., "int x = 5 // My comment").
+ *
+ * @return String without comments (e.g., "int x = 5").
+ */
+[[nodiscard]] std::string remove_comments_from_str(const std::string &str)
+{
+    // Create a copy of the input string (so we can use RVO when returning the result)
+    std::string temp = str;
+    // Find index of "//" in the string
+    if (const auto index = str.find("//"); index != std::string_view::npos) {
+        // Remove everything from the index to the end of the string
+        temp.erase(index);
+    }
+    return temp;
+}
+
+/**
  * @brief Convert a string to lowercase.
  *
  * This is a helper function that is not available outside this file.
@@ -49,28 +70,36 @@ Line::Line(const std::size_t line_number,
     if (this->contains_regex(std::regex(R"(^\s*\*)")) || this->contains_regex(std::regex(R"(^\s*//.*)"))) {
         return;
     }
-    // Extract all standard library functions used in the line
-    this->functions_ = this->get_all_regex_matches(
-        std::regex(R"(std::(\w+))"),  // Match standard library functions
-        1);                           // First capture group (e.g., "string" from "std::string")
     // Extract the header name from the include directive in the line
     this->include_ = this->get_first_regex_match(
         std::regex(R"(^\s*?#include.?<(\S+)>)"),  // Match include directives
         1);                                       // First capture group (e.g., "iostream" from "#include <iostream>")
+    // If the line contains an include directive, we cannot remove comments from it when running get_all_regex_matches, because we need to get the listed functions after the include directive, e.g., "#include <iostream> // for std::cout, for std::cerr"
+    // If it does not contain an include directive, we can remove comments, because they will only trigger false positives when running get_all_regex_matches, e.g., "int x = 5 // use std::cout to print x to the console"
+    const bool line_contains_include = !this->include_.empty();
+    // Extract all standard library functions used in the line
+    // If we have an include directive, we cannot remove comments from the line, because we need to get the listed functions after the include directive
+    // Otherwise, remove it to prevent false positives
+    this->functions_ = this->get_all_regex_matches(
+        std::regex(R"(std::(\w+))"),  // Match standard library functions
+        1,                            // First capture group (e.g., "string" from "std::string")
+        !line_contains_include);      // Remove comments: if true, remove comments before checking for match
+    const bool line_contains_functions = !this->functions_.empty();
     // Classify the line based on its content
-    if (!this->include_.empty()) {
-        // If the line contains an include directive...
-        if (!this->functions_.empty()) {
-            // ...and also contains standard library functions, classify it as an include line with functions
+    // If the line contains an include directive...
+    if (line_contains_include) {
+        // ...and also contains standard library functions, classify it as an include line with functions
+        if (line_contains_functions) {
             this->type_ = LineType::INCLUDE_WITH_FUNCTION;
         }
+        // ...and does not contain standard library functions, classify it as an include line
         else {
-            // ...and does not contain standard library functions, classify it as an include line
+
             this->type_ = LineType::BARE_INCLUDE;
         }
     }
-    else if (!this->functions_.empty()) {
-        // If the line does not contain an include directive but contains standard library functions, classify it as a function line
+    // If the line does not contain an include directive but contains standard library functions, classify it as a function line
+    else if (line_contains_functions) {
         this->type_ = LineType::FUNCTION;
     }
     // If the line does not contain an include directive or standard library functions, it remains with the default type (EMPTY)
@@ -119,11 +148,14 @@ std::string Line::get_first_regex_match(const std::regex &regex_pattern,
 }
 
 std::vector<std::string> Line::get_all_regex_matches(const std::regex &regex_pattern,
-                                                     const std::size_t capture_group) const
+                                                     const std::size_t capture_group,
+                                                     const bool remove_comments) const
 {
+    // If remove_comments is true, remove comments from the line
+    const std::string temp = remove_comments ? remove_comments_from_str(this->text_) : this->text_;
     std::vector<std::string> result;
     // Create const iterators pointing to the start and end of the sequence of matches
-    std::sregex_iterator begin(this->text_.cbegin(), this->text_.cend(), regex_pattern), end;
+    std::sregex_iterator begin(temp.cbegin(), temp.cend(), regex_pattern), end;
     // Use std::transform to iterate over each match in the sequence
     std::transform(begin, end, std::back_inserter(result),
                    [capture_group](const std::smatch &match) {
