@@ -27,8 +27,8 @@ class Line {
     /**
      * @brief Construct a new Line object.
      *
-     * @param line_number Line's number (e.g., 20).
-     * @param line_text Line's text (e.g., "hello").
+     * @param line_number Line number (e.g., 20).
+     * @param line_text Line text (e.g., "hello").
      */
     explicit Line(const std::size_t line_number,
                   const std::string &line_text);
