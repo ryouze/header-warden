@@ -161,15 +161,6 @@ class File {
     ~File() = default;
 
     /**
-     * @brief Get all matches of a regular expression pattern in the line.
-     *
-     * @param regex_pattern Regular expression pattern to search for (e.g., "he(.*)o").
-     * @param capture_group Capture group to be used. If set to "0", the entire matched string is returned. If set to "1", the first capture group is returned. Defaults to "0".
-     *
-     * @return All matches for the given regex pattern and capture group (e.g., {"ll", "a"}). If no matches are found, an empty vector is returned.
-     */
-
-    /**
      * @brief Get all lines of the source code file.
      *
      * The Line object automatically parses the line's content and type on construction. It contains line number, text, type, and other members.
