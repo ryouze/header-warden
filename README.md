@@ -3,7 +3,7 @@
 header-warden is a command-line tool that identifies and reports missing standard library headers in your C++ code.
 
 
-# Motivation
+## Motivation
 
 In many modern programming languages, such as Python, the use of a standard library module is explicitly declared, making it clear which module is being utilized.
 
