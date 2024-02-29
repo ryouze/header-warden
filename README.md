@@ -66,7 +66,7 @@ After running header-warden, you will receive a report that lists all standard l
 -> Reference: https://duckduckgo.com/?sites=cppreference.com&q=std%3A%3Avector&ia=web
 ```
 
-**Note:** The program ignores lines starting with `//`, but does not ignore multiline comments due to its line-by-line design.
+**Note:** The program' only analyzes comments that are directly associated with an include directive. For instance, if there's a comment in a line such as `int x = 5; // Use std::cout to print it`, the `std::cout` within the comment will not be taken into account by the program. It only becomes relevant if it's linked with an include directive, like in `#include <iostream>  // for std::cout`. Similarly, lines that are commented out, such as `// std::cerr << "ERROR!\n";`, or comments in documentation format like `* @param is_verbose If true, print with std::cout.`, are also ignored by the program. This approach ensures that your commented out code or documentation comments do not lead to false positives.
 
 
 ## Features
