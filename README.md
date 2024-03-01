@@ -48,21 +48,21 @@ After running header-warden, you will receive a report that lists all standard l
 
 ```
 --------------------------------------------------------------------------------
-##- example.cpp: BARE INCLUDES -##
+##- main.cpp: BARE INCLUDES -##
 
 2| #include <iostream>
 -> Bare include directive.
 -> Add a comment to "#include <iostream>" that lists which functions depend on it, e.g., "#include <iostream> // for std::foo, std::bar".
 
 --------------------------------------------------------------------------------
-##- example.cpp: UNUSED FUNCTIONS -##
+##- main.cpp: UNUSED FUNCTIONS -##
 
 1| #include <cstdlib>  // for std::exit, std::test, std::test2
 -> Unused functions listed as comments.
 -> Remove the following functions from comments of the "#include <cstdlib>" include directive: "std::test", "std::test2".
 
 --------------------------------------------------------------------------------
-##- example.cpp: UNLISTED FUNCTIONS -##
+##- main.cpp: UNLISTED FUNCTIONS -##
 
 4| std::vector<int> foo()
 -> Unlisted function.
@@ -132,17 +132,17 @@ To analyze a file, pass its filepath as a command line argument. Each file will 
 
 ```
 --------------------------------------------------------------------------------
-##- example.cpp: BARE INCLUDES -##
+##- main.cpp: BARE INCLUDES -##
 
 --------------------------------------------------------------------------------
-##- example.cpp: UNUSED FUNCTIONS -##
+##- main.cpp: UNUSED FUNCTIONS -##
 
 6| #include <string>     // for std::string, std::to_string
 -> Unused functions listed as comments.
 -> Remove the following functions from comments of the "#include <string>" include directive: "std::to_string".
 
 --------------------------------------------------------------------------------
-##- ../src/args.cpp: UNLISTED FUNCTIONS -##
+##- main.cpp: UNLISTED FUNCTIONS -##
 
 71|     std::copy_if(this->args_.begin(), this->args_.end(), std::back_inserter(positional_args),
 -> Unlisted function.
@@ -167,12 +167,12 @@ If no arguments are provided (or `--help` flag is used), the program will print 
 If a verbose (`--verbose`) flag is provided, the program outputs the full code with line-by-line categorization. This is useful for debugging.
 
 ```bash
-./header-warden example.cpp --verbose
+./header-warden main.cpp --verbose
 ```
 
 ```
 --------------------------------------------------------------------------------
-##- example.cpp: SOURCE CODE -##
+##- main.cpp: SOURCE CODE -##
 
 1| #include <cstdlib>  // for std::exit, std::test, std::test2
 -> Include directive with listed functions as a comment.
@@ -196,7 +196,7 @@ If a verbose (`--verbose`) flag is provided, the program outputs the full code w
 -> Nothing.
 
 --------------------------------------------------------------------------------
-##- example.cpp: BARE INCLUDES -##
+##- main.cpp: BARE INCLUDES -##
 
 2| #include <iostream>
 -> Bare include directive.
