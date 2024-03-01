@@ -10,8 +10,6 @@
 #include <string>     // for std::string, std::getline
 #include <vector>     // for std::vector
 
-namespace disk {
-
 // Helper functions that are not available outside this file
 namespace {
 
@@ -58,9 +56,9 @@ namespace {
 
 }  // namespace
 
-Line::Line(const std::size_t line_number,
-           const std::string &line_text)
-    : number_(line_number), text_(line_text), type_(LineType::EMPTY)
+disk::Line::Line(const std::size_t line_number,
+                 const std::string &line_text)
+    : number_(line_number), text_(line_text), type_(disk::LineType::EMPTY)
 {
     // Ignore empty lines
     if (this->text_.empty()) {
@@ -90,39 +88,39 @@ Line::Line(const std::size_t line_number,
     // If no include directive or functions, line remains with default type (EMPTY)
 }
 
-std::size_t Line::get_number() const
+std::size_t disk::Line::get_number() const
 {
     return this->number_;
 }
 
-const std::string &Line::get_text() const
+const std::string &disk::Line::get_text() const
 {
     return this->text_;
 }
 
-LineType Line::get_type() const
+disk::LineType disk::Line::get_type() const
 {
     return this->type_;
 }
 
-const std::vector<std::string> &Line::get_functions() const
+const std::vector<std::string> &disk::Line::get_functions() const
 {
     return this->functions_;
 }
 
-const std::string &Line::get_include() const
+const std::string &disk::Line::get_include() const
 {
     return this->include_;
 }
 
-bool Line::contains_regex(const std::regex &regex_pattern) const
+bool disk::Line::contains_regex(const std::regex &regex_pattern) const
 {
     // Use std::regex_search to check if the string contains the regex pattern
     return std::regex_search(this->text_, regex_pattern);
 }
 
-std::string Line::get_first_regex_match(const std::regex &regex_pattern,
-                                        const std::size_t capture_group) const
+std::string disk::Line::get_first_regex_match(const std::regex &regex_pattern,
+                                              const std::size_t capture_group) const
 {
     std::smatch match;
     // Return early if the regex search does not find a match or if the match size is not greater than the capture group.
@@ -132,9 +130,9 @@ std::string Line::get_first_regex_match(const std::regex &regex_pattern,
     return match.str(capture_group);
 }
 
-std::vector<std::string> Line::get_all_regex_matches(const std::regex &regex_pattern,
-                                                     const std::size_t capture_group,
-                                                     const bool remove_comments) const
+std::vector<std::string> disk::Line::get_all_regex_matches(const std::regex &regex_pattern,
+                                                           const std::size_t capture_group,
+                                                           const bool remove_comments) const
 {
     // If remove_comments is true, remove comments from the line
     const std::string temp = remove_comments ? remove_comments_from_str(this->text_) : this->text_;
@@ -150,8 +148,8 @@ std::vector<std::string> Line::get_all_regex_matches(const std::regex &regex_pat
     return result;
 }
 
-File::File(const std::string &file_path,
-           const bool turn_lowercase)
+disk::File::File(const std::string &file_path,
+                 const bool turn_lowercase)
 {
     // Load a file from disk
     std::ifstream file(file_path);
@@ -169,9 +167,7 @@ File::File(const std::string &file_path,
     this->lines_.shrink_to_fit();
 }
 
-const std::vector<Line> &File::get_lines() const
+const std::vector<disk::Line> &disk::File::get_lines() const
 {
     return this->lines_;
 }
-
-}  // namespace disk

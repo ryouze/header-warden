@@ -2,9 +2,7 @@
 
 #include <string>  // for std::string
 
-namespace net {
-
-[[nodiscard]] std::string create_cpp_reference_link(const std::string &name)
+std::string net::create_cpp_reference_link(const std::string &name)
 {
     // Initialize the link with the base URL for the DuckDuckGo search
     std::string link = "https://duckduckgo.com/?sites=cppreference.com&q=";
@@ -81,5 +79,3 @@ namespace net {
     link += "&ia=web";
     return link;
 }
-
-}  // namespace net

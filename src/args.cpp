@@ -5,22 +5,20 @@
 #include <string>     // for std::string
 #include <vector>     // for std::vector
 
-namespace args {
-
-ArgParser::ArgParser(const int argc,
-                     char **argv)
+args::ArgParser::ArgParser(const int argc,
+                           char **argv)
 {
     // Convert the C-style arguments to a string vector, starting from 1 to exclude the program name
     this->args_ = std::vector<std::string>(argv + 1, argv + argc);
     this->args_.shrink_to_fit();
 }
 
-bool ArgParser::empty() const
+bool args::ArgParser::empty() const
 {
     return this->args_.empty();
 }
 
-bool ArgParser::contains(const std::string &arg) const
+bool args::ArgParser::contains(const std::string &arg) const
 {
     // Use std::find to search for 'arg' in 'args_'.
     // -> If 'arg' is found, return an iterator pointing to the first occurrence of 'arg'.
@@ -29,13 +27,13 @@ bool ArgParser::contains(const std::string &arg) const
     return (std::find(this->args_.cbegin(), this->args_.cend(), arg) != this->args_.cend());
 }
 
-bool ArgParser::contains(const std::string &short_arg,
-                         const std::string &long_arg) const
+bool args::ArgParser::contains(const std::string &short_arg,
+                               const std::string &long_arg) const
 {
     return (this->contains(short_arg) || this->contains(long_arg));
 }
 
-// const std::string &ArgParser::value(const std::string &arg) const
+// const std::string &args::ArgParser::value(const std::string &arg) const
 // {
 //     // Find the iterator pointing to the given keyword in the arguments (e.g., "--file")
 //     std::vector<std::string>::const_iterator itr = std::find(this->args_.cbegin(), this->args_.cend(), arg);
@@ -47,7 +45,7 @@ bool ArgParser::contains(const std::string &short_arg,
 //     throw std::runtime_error("The keyword argument '" + arg + "' does not contain a value (e.g., `--file 'data.txt'`)");
 // }
 
-// const std::string &ArgParser::position(const std::size_t index) const
+// const std::string &args::ArgParser::position(const std::size_t index) const
 // {
 //     // If the index is out of range, throw an exception
 //     if (index >= this->args_.size()) {
@@ -58,12 +56,12 @@ bool ArgParser::contains(const std::string &short_arg,
 //     return this->args_[index];
 // }
 
-const std::vector<std::string> &ArgParser::get_arguments() const
+const std::vector<std::string> &args::ArgParser::get_arguments() const
 {
     return this->args_;
 }
 
-std::vector<std::string> ArgParser::get_positional_arguments() const
+std::vector<std::string> args::ArgParser::get_positional_arguments() const
 {
     std::vector<std::string> positional_args;
     // Use std::copy_if to copy arguments that do not begin with "-" or "--"
@@ -75,5 +73,3 @@ std::vector<std::string> ArgParser::get_positional_arguments() const
     positional_args.shrink_to_fit();
     return positional_args;
 }
-
-}  // namespace args

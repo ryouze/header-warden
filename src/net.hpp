@@ -12,6 +12,6 @@ namespace net {
  *
  * @return String containing a URL.
  */
-std::string create_cpp_reference_link(const std::string &name);
+[[nodiscard]] std::string create_cpp_reference_link(const std::string &name);
 
 }  // namespace net
