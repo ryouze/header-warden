@@ -16,6 +16,8 @@
 int main(int argc, char **argv)
 {
     try {
+        // Disable synchronization between the C++ standard streams (e.g., std::cin, std::cout) and their corresponding C equivalents
+        std::ios_base::sync_with_stdio(false);
         // Define a line separator for console output (outside loop for efficiency)
         const std::string line_separator(80, '-');
         // Parse command line arguments
