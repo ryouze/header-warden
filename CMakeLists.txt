@@ -52,14 +52,12 @@ add_compile_options("$<$<CONFIG:MINSIZEREL>:-Os>")
 # -Wpedantic: Request strict ISO C++ compliance
 add_compile_options(-Wall -Wextra -Werror -Wpedantic)
 
-# If the compiler is Clang and the build type is Debug, enable all warnings
+# Enable all warnings
 # -Weverything: Enable all warnings (Clang only)
 # -Wno-c++98-compat: Disable C++98 compatibility warnings (target is C++17)
 # -Wno-c++98-compat-pedantic: Disable C++98 compatibility pedantic warnings (target is C++17)
 # -Wno-padded: Disable padding warnings
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_options(-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded)
-endif()
+#add_compile_options(-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded)
 
 # Source files
 set(SOURCES
