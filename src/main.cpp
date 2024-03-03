@@ -96,8 +96,8 @@ int main(int argc, char **argv)
                 std::vector<std::string> unreferenced_functions = include_line.get_functions();
                 for (const auto &function_line : lines_with_functions) {
                     for (const auto &function_name : function_line.get_functions()) {
-                        auto it = std::find(unreferenced_functions.begin(), unreferenced_functions.end(), function_name);
-                        if (it != unreferenced_functions.end()) {
+                        const auto it = std::find(unreferenced_functions.cbegin(), unreferenced_functions.cend(), function_name);
+                        if (it != unreferenced_functions.cend()) {
                             unreferenced_functions.erase(it);
                         }
                     }
@@ -123,14 +123,14 @@ int main(int argc, char **argv)
                 // Reserve space in the unordered set for the functions
                 referenced_functions.reserve(functions.size());
                 // Insert the functions into the unordered set
-                referenced_functions.insert(functions.begin(), functions.end());
+                referenced_functions.insert(include_line.get_functions().cbegin(), include_line.get_functions().cend());
             }
             // Iterate over each line that has a function
             for (const auto &function_line : lines_with_functions) {
                 // Iterate over each function in the line
                 for (const auto &function_name : function_line.get_functions()) {
                     // If the function is not in the unordered set of included functions
-                    if (referenced_functions.find(function_name) == referenced_functions.end()) {
+                    if (referenced_functions.find(function_name) == referenced_functions.cend()) {
                         std::cout << function_line.get_number() << "| " + function_line.get_text() << '\n';
                         std::cout << "-> Unlisted function.\n-> Add \"std::" << function_name << "\" as a comment to the include directives, e.g., \"#include <foo> // for std::" << function_name << "\".\n";
                         // Create a URL to cppreference.com for the function
