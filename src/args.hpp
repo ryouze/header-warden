@@ -22,11 +22,6 @@ class ArgParser {
                        char **argv);
 
     /**
-     * @brief Destroy the ArgParser object.
-     */
-    ~ArgParser() = default;
-
-    /**
      * @brief Check if the list of arguments is empty.
      *
      * @return True if the list of arguments is empty, false otherwise.

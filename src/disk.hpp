@@ -36,11 +36,6 @@ class Line {
                   const std::string &line_text);
 
     /**
-     * @brief Destroy the Line object.
-     */
-    ~Line() = default;
-
-    /**
      * @brief Get the line number.
      *
      * @return Line number (e.g., "20").
@@ -151,18 +146,13 @@ class File {
     /**
      * @brief Construct a new File object.
      *
-     * @param file_pat Path to the source code file (e.g., "~/data/file.txt").
+     * @param file_path Path to the source code file (e.g., "~/data/file.txt").
      * @param turn_lowercase Whether to turn the source code lowercase. If set to "true", the source code will be turned lowercase. If set to "false", the source code will be left in its original case, which might cause problems with regular expressions. Defaults to "true".
      *
      * @throws std::runtime_error if failed to open the source code file.
      */
     explicit File(const std::string &file_path,
                   const bool turn_lowercase = true);
-
-    /**
-     * @brief Destroy the File object.
-     */
-    ~File() = default;
 
     /**
      * @brief Get all lines of the source code file.
