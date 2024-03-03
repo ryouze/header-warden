@@ -77,10 +77,6 @@ int main(int argc, char **argv)
                 }
             }
             conditional_verbose_log("\n");
-            // Shrink the vectors to fit their sizes
-            lines_with_includes.shrink_to_fit();
-            lines_with_includes_and_functions.shrink_to_fit();
-            lines_with_functions.shrink_to_fit();
             // +-------------------------+ //
             // | ANALYZE & PRINT RESULTS | //
             // +-------------------------+ //
@@ -106,7 +102,6 @@ int main(int argc, char **argv)
                         }
                     }
                 }
-                unreferenced_functions.shrink_to_fit();
                 if (!unreferenced_functions.empty()) {
                     std::cout << include_line.get_number() << "| " + include_line.get_text() << '\n';
                     std::cout << "-> Unused functions listed as comments.\n-> Remove the following functions from comments of the \"#include <" << include_line.get_include() << ">\" include directive: ";

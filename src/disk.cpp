@@ -144,7 +144,6 @@ std::vector<std::string> disk::Line::get_all_regex_matches(const std::regex &reg
                    [capture_group](const std::smatch &match) {
                        return match.size() > capture_group ? match.str(capture_group) : match.str();
                    });
-    result.shrink_to_fit();
     return result;
 }
 
