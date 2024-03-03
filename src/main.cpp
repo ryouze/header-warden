@@ -38,7 +38,7 @@ int main(int argc, char **argv)
         const bool is_verbose = arg_parser.contains("-v", "--verbose");
         // Define a lambda function for printing based on the verbose flag
         // If is_verbose is true, print the message, otherwise do nothing
-        auto conditional_verbose_log = [&is_verbose](const std::string &message) {
+        const auto conditional_verbose_log = [&is_verbose](const std::string &message) {
             if (is_verbose) {
                 std::cout << message;
             }
