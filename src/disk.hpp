@@ -29,6 +29,8 @@ class Line {
      *
      * @param line_number Line number (e.g., 20).
      * @param line_text Line text (e.g., "hello").
+     *
+     * @throws std::runtime_error if failed to process the line.
      */
     explicit Line(const std::size_t line_number,
                   const std::string &line_text);

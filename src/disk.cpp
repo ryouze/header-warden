@@ -64,28 +64,33 @@ disk::Line::Line(const std::size_t line_number,
     if (this->text_.empty()) {
         return;
     }
-    // Ignore comments (line starts with "*" or "//", optionally preceded by whitespace)
-    if (this->contains_regex(std::regex(R"(^\s*\*)")) || this->contains_regex(std::regex(R"(^\s*//.*)"))) {
-        return;
+    try {
+        // Ignore comments (line starts with "*" or "//", optionally preceded by whitespace)
+        if (this->contains_regex(std::regex(R"(^\s*\*)")) || this->contains_regex(std::regex(R"(^\s*//.*)"))) {
+            return;
+        }
+        // Extract header name from include directive, if present
+        this->include_ = this->get_first_regex_match(std::regex(R"(^\s*?#include.?<(\S+)>)"), 1);
+        const bool line_contains_include = !this->include_.empty();
+        // Extract all standard library functions used in the line
+        // If line contains include directive, comments are not removed to preserve functions listed after the directive
+        // E.g., "#include <iostream> // for std::cout, for std::cerr"
+        // If line does not contain include directive, comments are removed to prevent false positives
+        // E.g., "int x = 5 // use std::cout to print x to the console"
+        this->functions_ = this->get_all_regex_matches(std::regex(R"(std::(\w+))"), 1, !line_contains_include);
+        const bool line_contains_functions = !this->functions_.empty();
+        // Classify the line based on its content
+        if (line_contains_include) {
+            this->type_ = line_contains_functions ? LineType::INCLUDE_WITH_FUNCTION : LineType::BARE_INCLUDE;
+        }
+        else if (line_contains_functions) {
+            this->type_ = LineType::FUNCTION;
+        }
+        // If no include directive or functions, line remains with default type (EMPTY)
     }
-    // Extract header name from include directive, if present
-    this->include_ = this->get_first_regex_match(std::regex(R"(^\s*?#include.?<(\S+)>)"), 1);
-    const bool line_contains_include = !this->include_.empty();
-    // Extract all standard library functions used in the line
-    // If line contains include directive, comments are not removed to preserve functions listed after the directive
-    // E.g., "#include <iostream> // for std::cout, for std::cerr"
-    // If line does not contain include directive, comments are removed to prevent false positives
-    // E.g., "int x = 5 // use std::cout to print x to the console"
-    this->functions_ = this->get_all_regex_matches(std::regex(R"(std::(\w+))"), 1, !line_contains_include);
-    const bool line_contains_functions = !this->functions_.empty();
-    // Classify the line based on its content
-    if (line_contains_include) {
-        this->type_ = line_contains_functions ? LineType::INCLUDE_WITH_FUNCTION : LineType::BARE_INCLUDE;
+    catch (const std::exception &e) {
+        throw std::runtime_error("Failed to process line '" + this->text_ + "': " + e.what());
     }
-    else if (line_contains_functions) {
-        this->type_ = LineType::FUNCTION;
-    }
-    // If no include directive or functions, line remains with default type (EMPTY)
 }
 
 std::size_t disk::Line::get_number() const
