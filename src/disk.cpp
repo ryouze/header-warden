@@ -3,11 +3,12 @@
 #include <algorithm>  // for std::transform
 #include <cctype>     // for std::tolower
 #include <cstddef>    // for std::size_t
+#include <exception>  // for std::exception
 #include <fstream>    // for std::ifstream
 #include <iterator>   // for std::back_inserter
 #include <regex>      // for std::regex, std::regex_search, std::smatch, std::sregex_iterator
 #include <stdexcept>  // for std::runtime_error
-#include <string>     // for std::string, std::getline
+#include <string>     // for std::string, std::getline, std::to_string
 #include <vector>     // for std::vector
 
 // Helper functions that are not available outside this file
