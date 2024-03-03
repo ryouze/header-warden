@@ -89,7 +89,7 @@ disk::Line::Line(const std::size_t line_number,
         // If no include directive or functions, line remains with default type (EMPTY)
     }
     catch (const std::exception &e) {
-        throw std::runtime_error("Failed to process line '" + this->text_ + "': " + e.what());
+        throw std::runtime_error("Failed to process line " + std::to_string(line_number) + " ('" + this->text_ + "'): " + e.what());
     }
 }
 
