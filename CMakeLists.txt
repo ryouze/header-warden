@@ -2,9 +2,9 @@
 cmake_minimum_required(VERSION 3.19)
 
 # Project name
-project(header-warden
+project(
+    header-warden
     VERSION 1.0
-    DESCRIPTION "Find missing standard library headers in C++."
     LANGUAGES CXX
 )
 
@@ -38,21 +38,21 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     )
 endif()
 
-# Set optimization levels for different configurations:
+# Set optimization levels for all targets based on build type:
 # - Release: Enable level 3 optimizations (-O3) for maximum performance
 # - MinSizeRel: Optimize for size (-Os), enabling all -O2 optimizations that do not increase code size
 add_compile_options("$<$<CONFIG:RELEASE>:-O3>")
 add_compile_options("$<$<CONFIG:MINSIZEREL>:-Os>")
 
-# Compile options (must be placed before add_executable)
+# Add compile options for all targets
 # -Wall: Enable all warnings
 # -Wextra: Enable extra warnings that are not enabled by -Wall
 # -Werror: Treat warnings as errors
 # -Wpedantic: Request strict ISO C++ compliance
 add_compile_options(-Wall -Wextra -Werror -Wpedantic)
 
-# Enable all warnings
-# -Weverything: Enable all warnings (Clang only)
+# Enable all warnings for all targets (Clang only)
+# -Weverything: Enable all warnings
 # -Wno-c++98-compat: Disable C++98 compatibility warnings (target is C++17)
 # -Wno-c++98-compat-pedantic: Disable C++98 compatibility pedantic warnings (target is C++17)
 # -Wno-padded: Disable padding warnings
