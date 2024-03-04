@@ -86,6 +86,7 @@ After running header-warden, you will receive a report that lists all standard l
 This project has been tested on the following systems:
 
 - MacOS 14.3 (Sonoma)
+- Debian 12 (Bookworm)
 
 
 ## Requirements
