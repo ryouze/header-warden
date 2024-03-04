@@ -5,6 +5,7 @@
 #include <algorithm>      // for std::find
 #include <cstdlib>        // for std::exit, EXIT_SUCCESS, EXIT_FAILURE
 #include <exception>      // for std::exception
+#include <ios>            // for std::ios_base
 #include <iostream>       // for std::cout, std::cerr
 #include <string>         // for std::string, std::to_string
 #include <unordered_set>  // for std::unordered_set
