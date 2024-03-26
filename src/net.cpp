@@ -6,6 +6,7 @@ std::string net::create_cpp_reference_link(const std::string &name)
 {
     // Initialize the link with the base URL for the DuckDuckGo search
     std::string link = "https://duckduckgo.com/?sites=cppreference.com&q=";
+
     // Iterate over each character in the function name
     for (const auto &character : name) {
         // URL-encode special characters

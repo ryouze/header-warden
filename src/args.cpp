@@ -37,10 +37,12 @@ bool args::ArgParser::contains(const std::string &short_arg,
 // {
 //     // Find the iterator pointing to the given keyword in the arguments (e.g., "--file")
 //     std::vector<std::string>::const_iterator itr = std::find(this->args_.cbegin(), this->args_.cend(), arg);
+
 //     // If the keyword is found (e.g., "--file") and there is an element after it (e.g., "data.txt"), return the next element as the value (e.g., "data.txt")
 //     if (itr != this->args_.cend() && ++itr != this->args_.cend()) {
 //         return *itr;
 //     }
+
 //     // If the keyword is not found or there is no element after it, throw an exception
 //     throw std::runtime_error("The keyword argument '" + arg + "' does not contain a value (e.g., `--file 'data.txt'`)");
 // }
@@ -51,6 +53,7 @@ bool args::ArgParser::contains(const std::string &short_arg,
 //     if (index >= this->args_.size()) {
 //         throw std::out_of_range("The requested index of the positional argument '" + std::to_string(index) + "' is out of range");
 //     }
+
 //     // Return a reference to the value of the argument at the given index
 //     // We already checked for out-of-range index, so it's safe to use the [] operator
 //     return this->args_[index];
@@ -63,13 +66,17 @@ const std::vector<std::string> &args::ArgParser::get_arguments() const
 
 std::vector<std::string> args::ArgParser::get_positional_arguments() const
 {
+    // Create a vector to store positional arguments
     std::vector<std::string> positional_args;
+
     // Use std::copy_if to copy arguments that do not begin with "-" or "--"
     std::copy_if(this->args_.cbegin(), this->args_.cend(), std::back_inserter(positional_args),
                  [](const std::string &arg) {
                      // Check if the argument does not start with "-" and does not start with "--"
                      return arg.empty() || (arg[0] != '-' && (arg.size() <= 1 || arg[1] != '-'));
                  });
+
+    // Return shrunk vector of positional arguments
     positional_args.shrink_to_fit();
     return positional_args;
 }
