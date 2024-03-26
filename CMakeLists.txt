@@ -75,5 +75,8 @@ else()
     message(STATUS "Link Time Optimization is not supported or disabled for Debug build.")
 endif()
 
+# Generate compile_commands.json for better tooling support
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
+
 # Print the build type
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
