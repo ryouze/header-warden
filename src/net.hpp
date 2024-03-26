@@ -6,7 +6,6 @@ namespace net {
 
 /**
  * @brief Create a URL that links to a DuckDuckGo search for the name provided on cppreference.com.
- *  for a DuckDuckGo search targeting cppreference.com.
  *
  * @param name Name of the C++ function (or any other keyword) to create a link for (e.g., "algorithm", "std::string").
  *

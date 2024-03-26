@@ -1,82 +1,60 @@
 #include "net.hpp"
 
-#include <string>  // for std::string
+#include <sstream>        // for std::ostringstream
+#include <string>         // for std::string
+#include <unordered_map>  // for std::unordered_map
 
 std::string net::create_cpp_reference_link(const std::string &name)
 {
-    // Initialize the link with the base URL for the DuckDuckGo search
-    std::string link = "https://duckduckgo.com/?sites=cppreference.com&q=";
+    // URL encoding map
+    // This list is not exhaustive, and only includes the characters that are most likely to appear in function names
+    // If the link is broken, it's not critical, as it's primarily used as a suggestion to add include headers for standard library functions
+    static const std::unordered_map<char, std::string> url_encoding = {
+        {' ', "%20"},
+        {'!', "%21"},
+        {'#', "%23"},
+        {'$', "%24"},
+        {'&', "%26"},
+        {'\'', "%27"},
+        {'(', "%28"},
+        {')', "%29"},
+        {'*', "%2A"},
+        {'+', "%2B"},
+        {',', "%2C"},
+        {'/', "%2F"},
+        {':', "%3A"},
+        {';', "%3B"},
+        {'=', "%3D"},
+        {'?', "%3F"},
+        {'@', "%40"},
+        {'[', "%5B"},
+        {']', "%5D"},
+    };
 
-    // Iterate over each character in the function name
+    // Initialize the link with the base URL for the DuckDuckGo search
+    std::ostringstream link;
+    link << "https://duckduckgo.com/?sites=cppreference.com&q=";
+
+    // Iterate over each character in the provided function name (e.g., "std::string")
+    // This ensures that all special characters are properly encoded
     for (const auto &character : name) {
-        // URL-encode special characters
-        // This list is not exhaustive, and only includes the characters that are most likely to appear in function names
-        // If the link is broken, it's not critical, as it's primarily used as a suggestion to add include headers for standard library functions
-        switch (character) {
-        case ' ':
-            link += "%20";
-            break;
-        case '!':
-            link += "%21";
-            break;
-        case '#':
-            link += "%23";
-            break;
-        case '$':
-            link += "%24";
-            break;
-        case '&':
-            link += "%26";
-            break;
-        case '\'':
-            link += "%27";
-            break;
-        case '(':
-            link += "%28";
-            break;
-        case ')':
-            link += "%29";
-            break;
-        case '*':
-            link += "%2A";
-            break;
-        case '+':
-            link += "%2B";
-            break;
-        case ',':
-            link += "%2C";
-            break;
-        case '/':
-            link += "%2F";
-            break;
-        case ':':
-            link += "%3A";
-            break;
-        case ';':
-            link += "%3B";
-            break;
-        case '=':
-            link += "%3D";
-            break;
-        case '?':
-            link += "%3F";
-            break;
-        case '@':
-            link += "%40";
-            break;
-        case '[':
-            link += "%5B";
-            break;
-        case ']':
-            link += "%5D";
-            break;
-        default:
-            // If the character is not a special character, add it to the link as is
-            link += character;
-            break;
+
+        // Find the character in the URL encoding map (e.g., ":")
+        const auto encoded = url_encoding.find(character);
+
+        if (encoded != url_encoding.end()) {
+            // If found, add the URL-encoded version of the character (e.g., "%3A")
+            link << encoded->second;
+        }
+        else {
+            // Otherwise, add the original character (e.g., ":")
+            link << character;
         }
     }
+
     // Add the final part of the URL
-    link += "&ia=web";
-    return link;
+    link << "&ia=web";
+
+    // Return the link as a string
+    return link.str();
 }
