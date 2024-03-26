@@ -78,13 +78,11 @@ endif()
 # Link-Time Optimization (must be placed after add_executable)
 include(CheckIPOSupported)
 check_ipo_supported(RESULT result)
-if(result)
-    set_property(GLOBAL
-        PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE
-    )
+if(result AND NOT CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo")
+    set_property(GLOBAL PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
     message(STATUS "Link Time Optimization is enabled.")
 else()
-    message(STATUS "Link Time Optimization is not supported.")
+    message(STATUS "Link Time Optimization is either not supported by the compiler or has been manually disabled for Debug or RelWithDebInfo build types.")
 endif()
 
 # Print the build type
