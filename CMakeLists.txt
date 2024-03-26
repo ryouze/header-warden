@@ -19,8 +19,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Default build type: Release
-set(default_build_type "Release")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(default_build_type "Release")
     message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
     set(CMAKE_BUILD_TYPE
         "${default_build_type}"
@@ -33,16 +33,11 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         PROPERTY STRINGS
         "Debug"
         "Release"
-        "MinSizeRel"
-        "RelWithDebInfo"
     )
 endif()
 
-# Set optimization levels for all targets based on build type:
-# - Release: Enable level 3 optimizations (-O3) for maximum performance
-# - MinSizeRel: Optimize for size (-Os), enabling all -O2 optimizations that do not increase code size
+# Set optimization level to -O3 for Release build type
 add_compile_options("$<$<CONFIG:RELEASE>:-O3>")
-add_compile_options("$<$<CONFIG:MINSIZEREL>:-Os>")
 
 # Add compile options for all targets
 # -Wall: Enable all warnings
@@ -78,11 +73,11 @@ endif()
 # Link-Time Optimization (must be placed after add_executable)
 include(CheckIPOSupported)
 check_ipo_supported(RESULT result)
-if(result AND NOT CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo")
+if(result AND NOT CMAKE_BUILD_TYPE MATCHES Debug)
     set_property(GLOBAL PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
     message(STATUS "Link Time Optimization is enabled.")
 else()
-    message(STATUS "Link Time Optimization is either not supported by the compiler or has been manually disabled for Debug or RelWithDebInfo build types.")
+    message(STATUS "Link Time Optimization is not supported or disabled for Debug build.")
 endif()
 
 # Print the build type
