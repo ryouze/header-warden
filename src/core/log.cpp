@@ -102,22 +102,22 @@ void print_formatted(std::ostream &os, const std::string &level, const std::stri
 
 }  // namespace
 
-void shared::log::impl::log(const shared::log::impl::LogLevel level, const std::string &caller, const long line, const std::string &message)
+void core::log::impl::log(const core::log::impl::LogLevel level, const std::string &caller, const long line, const std::string &message)
 {
     switch (level) {
-    case shared::log::impl::LogLevel::DEBUG:
+    case core::log::impl::LogLevel::DEBUG:
         // Only print if verbose mode is enabled
-        if (shared::globals::verbose) {
+        if (core::globals::verbose) {
             print_formatted(std::cout, "DEBUG  ", caller, line, message);
         }
         break;
-    case shared::log::impl::LogLevel::INFO:
+    case core::log::impl::LogLevel::INFO:
         print_formatted(std::cout, "INFO   ", caller, line, message);
         break;
-    case shared::log::impl::LogLevel::WARNING:
+    case core::log::impl::LogLevel::WARNING:
         print_formatted(std::cerr, "WARNING", caller, line, message);
         break;
-    case shared::log::impl::LogLevel::ERROR:
+    case core::log::impl::LogLevel::ERROR:
         print_formatted(std::cerr, "ERROR  ", caller, line, message);
         break;
     }

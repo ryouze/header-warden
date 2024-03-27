@@ -1,12 +1,12 @@
 /**
  * @file globals.hpp
  *
- * @brief Global variables shared across the application.
+ * @brief Global variables.
  */
 
 #pragma once
 
-namespace shared {
+namespace core {
 namespace globals {
 
 /**
@@ -15,4 +15,4 @@ namespace globals {
 inline bool verbose = false;
 
 }  // namespace globals
-}  // namespace shared
+}  // namespace core

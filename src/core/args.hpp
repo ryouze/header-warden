@@ -1,7 +1,7 @@
 /**
  * @file args.hpp
  *
- * @brief Core command-line argument parser for the application.
+ * @brief Core command-line argument parser.
  */
 
 #pragma once

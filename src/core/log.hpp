@@ -1,14 +1,14 @@
 /**
  * @file log.hpp
  *
- * @brief Logging utilities shared across the application.
+ * @brief Core logging functions.
  */
 
 #pragma once
 
 #include <string>  // for std::string
 
-namespace shared {
+namespace core {
 namespace log {
 
 namespace impl {
@@ -39,7 +39,7 @@ void log(const LogLevel level, const std::string &caller, const long line, const
 
 }  // namespace impl
 }  // namespace log
-}  // namespace shared
+}  // namespace core
 
 /**
  * @brief Macro to print a debug-level message to the standard output.
@@ -48,25 +48,25 @@ void log(const LogLevel level, const std::string &caller, const long line, const
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_DEBUG(message) shared::log::impl::log(shared::log::impl::LogLevel::DEBUG, __func__, __LINE__, message)
+#define LOG_DEBUG(message) core::log::impl::log(core::log::impl::LogLevel::DEBUG, __func__, __LINE__, message)
 
 /**
  * @brief Macro to print an info-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_INFO(message) shared::log::impl::log(shared::log::impl::LogLevel::INFO, __func__, __LINE__, message)
+#define LOG_INFO(message) core::log::impl::log(core::log::impl::LogLevel::INFO, __func__, __LINE__, message)
 
 /**
  * @brief Macro to print a warning-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_WARNING(message) shared::log::impl::log(shared::log::impl::LogLevel::WARNING, __func__, __LINE__, message)
+#define LOG_WARNING(message) core::log::impl::log(core::log::impl::LogLevel::WARNING, __func__, __LINE__, message)
 
 /**
  * @brief Macro to print an error-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_ERROR(message) shared::log::impl::log(shared::log::impl::LogLevel::ERROR, __func__, __LINE__, message)
+#define LOG_ERROR(message) core::log::impl::log(core::log::impl::LogLevel::ERROR, __func__, __LINE__, message)
