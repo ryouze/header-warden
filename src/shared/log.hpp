@@ -27,6 +27,8 @@ enum class LogLevel {
  *
  * This function is used by the logging macros.
  *
+ * The debug-level messages are only printed if the global variable "globals::verbose" is set to "true".
+ *
  * @param level Log level of the message (e.g., debug, info, warning, error).
  * @param caller Name of the calling function (e.g., "main").
  * @param line Line number in the source code file (e.g., "42").

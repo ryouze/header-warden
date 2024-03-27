@@ -1,3 +1,7 @@
+/**
+ * @file log.cpp
+ */
+
 #include "log.hpp"
 #include "globals.hpp"
 
