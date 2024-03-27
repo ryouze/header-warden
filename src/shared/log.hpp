@@ -10,6 +10,7 @@
 
 namespace shared {
 namespace log {
+
 namespace impl {
 
 /**
@@ -19,7 +20,7 @@ enum class LogLevel {
     DEBUG,
     INFO,
     WARNING,
-    ERROR
+    ERROR,
 };
 
 /**
