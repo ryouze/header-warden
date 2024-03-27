@@ -83,38 +83,38 @@ std::string get_current_time()
  * @param os Output stream to print the message to (e.g., "std::cout", "std::cerr").
  * @param level Log level (e.g., "DEBUG", "INFO", "WARNING", "ERROR").
  * @param caller Name of the function that is logging the message (e.g., "main").
+ * @param line Line number in the source code file (e.g., "42").
  * @param message Message to log (e.g., "hello").
  */
-void print_formatted(std::ostream &os, const std::string &level, const std::string &caller, const std::string &message)
+void print_formatted(std::ostream &os, const std::string &level, const std::string &caller, const int line, const std::string &message)
 {
     // Lock the output stream to prevent interleaved output
     static std::mutex mtx;
     std::lock_guard<std::mutex> lock(mtx);
 
     // Print the formatted log message using the specified output stream (e.g., "std::cout", "std::cerr")
-    os << get_current_time() << " | " << level << " | " << caller << " - " << message << '\n';
+    os << get_current_time() << " | " << level << " | " << caller << ":" << line << " - " << message << '\n';
 }
 
 }  // namespace
 
-void shared::log::impl::debug(const std::string &caller, const std::string &message)
+void shared::log::impl::log(const shared::log::impl::LogLevel level, const std::string &caller, const long line, const std::string &message)
 {
-    if (globals::verbose) {
-        print_formatted(std::cout, "DEBUG  ", caller, message);
+    switch (level) {
+    case shared::log::impl::LogLevel::DEBUG:
+        // Only print if verbose mode is enabled
+        if (shared::globals::verbose) {
+            print_formatted(std::cout, "DEBUG  ", caller, line, message);
+        }
+        break;
+    case shared::log::impl::LogLevel::INFO:
+        print_formatted(std::cout, "INFO   ", caller, line, message);
+        break;
+    case shared::log::impl::LogLevel::WARNING:
+        print_formatted(std::cerr, "WARNING", caller, line, message);
+        break;
+    case shared::log::impl::LogLevel::ERROR:
+        print_formatted(std::cerr, "ERROR  ", caller, line, message);
+        break;
     }
-}
-
-void shared::log::impl::info(const std::string &caller, const std::string &message)
-{
-    print_formatted(std::cout, "INFO   ", caller, message);
-}
-
-void shared::log::impl::warning(const std::string &caller, const std::string &message)
-{
-    print_formatted(std::cerr, "WARNING", caller, message);
-}
-
-void shared::log::impl::error(const std::string &caller, const std::string &message)
-{
-    print_formatted(std::cerr, "ERROR  ", caller, message);
 }
