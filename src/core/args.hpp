@@ -15,7 +15,9 @@ namespace args {
 /**
  * @brief Class that parses command-line arguments.
  *
- * On construction, the arguments are stored as a vector of strings. The class provides methods to check for the existence of arguments and retrieve their values. The program's name is not included in the list of arguments.
+ * On construction, the arguments are stored as a vector of strings. The class provides methods to check for the existence of arguments and retrieve their values.
+ *
+ * @note The program's name (`argv[0]`) is not included in the list of arguments. It is stored separately as `program_name_`. Use `get_help()` to get a formatted help message with the program's name included.
  */
 class ArgParser {
   public:
@@ -93,7 +95,19 @@ class ArgParser {
      */
     [[nodiscard]] std::vector<std::string> get_positional_arguments() const;
 
+    /**
+     * @brief Get formatted help message for the program.
+     *
+     * @return Formatted help message (e.g., "Usage: ./bin").
+     */
+    [[nodiscard]] std::string get_help() const;
+
   private:
+    /**
+     * @brief Name of the program (e.g., "./bin").
+     */
+    std::string program_name_;
+
     /**
      * @brief All arguments, both positional and keyword (e.g., {"data/file1.txt", "data/file2.txt", "--verbose", "-h"}).
      */

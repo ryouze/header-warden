@@ -12,6 +12,9 @@
 core::args::ArgParser::ArgParser(const int argc,
                                  char **argv)
 {
+    // Store the program name (e.g., "./bin")
+    this->program_name_ = argv[0];
+
     // Convert the C-style arguments to a string vector, starting from 1 to exclude the program name
     this->args_ = std::vector<std::string>(argv + 1, argv + argc);
     this->args_.shrink_to_fit();
@@ -83,4 +86,20 @@ std::vector<std::string> core::args::ArgParser::get_positional_arguments() const
     // Return shrunk vector of positional arguments
     positional_args.shrink_to_fit();
     return positional_args;
+}
+
+std::string core::args::ArgParser::get_help() const
+{
+    return "Usage: " + this->program_name_ +
+           " [OPTIONS]... [FILE]...\n\n"
+           "Description:\n"
+           "  Find missing standard library headers in C++ files.\n\n"
+           "Options:\n"
+           "  -h, --help       Display this help message and exit.\n"
+           "  -v, --verbose    Display detailed output.\n\n"
+           "Arguments:\n"
+           "  FILE             One or more C++ files to analyze. Specify the path to each file.\n\n"
+           "Example:\n"
+           "  " +
+           this->program_name_ + " *.cpp\n";
 }
