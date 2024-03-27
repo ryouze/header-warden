@@ -52,7 +52,7 @@ std::string strings::to_lower(const std::string &str)
     return lower_str;
 }
 
-std::string remove_comments(const std::string &str)
+std::string strings::remove_comments(const std::string &str)
 {
     LOG_DEBUG("Removing comments from string '" + str + '\'');
 
