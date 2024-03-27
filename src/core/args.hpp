@@ -1,7 +1,7 @@
 /**
  * @file args.hpp
  *
- * @brief Command-line argument parser.
+ * @brief Core command-line argument parser for the application.
  */
 
 #pragma once
@@ -9,6 +9,7 @@
 #include <string>  // for std::string
 #include <vector>  // for std::vector
 
+namespace core {
 namespace args {
 
 /**
@@ -100,3 +101,4 @@ class ArgParser {
 };
 
 }  // namespace args
+}  // namespace core
