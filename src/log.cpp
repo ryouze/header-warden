@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <iomanip>
+#include <mutex>
 #include <sstream>
 
 namespace {
@@ -42,12 +43,18 @@ std::string compute_timestamp(const std::chrono::system_clock::time_point &tp)
 /**
  * @brief Private helper function to get the current time.
  *
- * This computes the current time only once per second to improve performance.
+ * The time is cached and only updated once per second.
+ *
+ * This is thread-safe.
  *
  * @return String representing the current time in the "YYYY-MM-DD HH:MM:SS" format (e.g., "2024-01-01 12:34:56").
  */
 std::string get_current_time()
 {
+    // Lock the function to prevent multiple threads from computing the timestamp at the same time
+    static std::mutex mtx;
+    std::lock_guard<std::mutex> lock(mtx);
+
     // Get the current time
     auto now = std::chrono::system_clock::now();
 
@@ -69,6 +76,8 @@ std::string get_current_time()
 /**
  * @brief Private helper function to print a log message.
  *
+ * This is thread-safe.
+ *
  * @param os Output stream to print the message to (e.g., "std::cout", "std::cerr").
  * @param level Log level (e.g., "DEBUG", "INFO", "WARNING", "ERROR").
  * @param caller Name of the function that is logging the message (e.g., "main").
@@ -76,6 +85,11 @@ std::string get_current_time()
  */
 void print_formatted(std::ostream &os, const std::string &level, const std::string &caller, const std::string &message)
 {
+    // Lock the output stream to prevent interleaved output
+    static std::mutex mtx;
+    std::lock_guard<std::mutex> lock(mtx);
+
+    // Print the formatted log message using the specified output stream (e.g., "std::cout", "std::cerr")
     os << get_current_time() << " | " << level << " | " << caller << " - " << message << '\n';
 }
 
