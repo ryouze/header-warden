@@ -10,6 +10,30 @@
 namespace {
 
 /**
+ * @brief Private helper function to convert a time point to a formatted timestamp string.
+ *
+ * @param tp Time point to convert.
+ * @return String representing the time point in the "YYYY-MM-DD HH:MM:SS" format.
+ */
+std::string compute_timestamp(const std::chrono::system_clock::time_point &tp)
+{
+    // Convert the time point to a time_t structure
+    auto tp_c = std::chrono::system_clock::to_time_t(tp);
+
+    // Convert the time_t structure to a tm structure
+    std::tm *time_info = std::localtime(&tp_c);
+
+    // Create an output string stream
+    std::ostringstream oss;
+
+    // Format the tm structure into the string stream in the "YYYY-MM-DD HH:MM:SS" format
+    oss << std::put_time(time_info, "%Y-%m-%d %H:%M:%S");
+
+    // Return the formatted timestamp string
+    return oss.str();
+}
+
+/**
  * @brief Private helper function to get the current time.
  *
  * This computes the current time only once per second to improve performance.
@@ -18,37 +42,21 @@ namespace {
  */
 std::string get_current_time()
 {
-    static auto now = std::chrono::system_clock::now();
-    static auto last_time = now;
-
-    auto now_c = std::chrono::system_clock::to_time_t(now);
-    std::tm *time_info = std::localtime(&now_c);
-    std::ostringstream oss;
-    oss << std::put_time(time_info, "%Y-%m-%d %H:%M:%S");
-    static std::string last_timestamp = oss.str();
-
     // Get the current time
-    now = std::chrono::system_clock::now();
+    auto now = std::chrono::system_clock::now();
+
+    // Static variables to store the last computed timestamp and the time when it was computed
+    static auto last_time = now;
+    static std::string last_timestamp = compute_timestamp(now);
 
     // Check if the current time is still within the same second as the last computed timestamp
-    if (now - last_time < std::chrono::seconds(1)) {
-        // If it is, reuse the last computed timestamp
-        // std::cout << "REUSED\n";
-        return last_timestamp;
+    if (now - last_time >= std::chrono::seconds(1)) {
+        // If it's not, compute a new timestamp
+        last_timestamp = compute_timestamp(now);
+        last_time = now;
     }
 
-    // If it's not, compute a new timestamp
-    now_c = std::chrono::system_clock::to_time_t(now);
-
-    time_info = std::localtime(&now_c);
-    oss.str("");
-    oss << std::put_time(time_info, "%Y-%m-%d %H:%M:%S");
-
-    // Store the new timestamp and the time when it was computed
-    last_timestamp = oss.str();
-    last_time = now;
-
-    // std::cout << "NEW\n";
+    // Return the last computed timestamp (either the current time or the last computed time)
     return last_timestamp;
 }
 
