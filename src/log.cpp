@@ -1,12 +1,14 @@
 #include "log.hpp"
 #include "globals.hpp"
 
-#include <iostream>
-
-#include <chrono>
-#include <iomanip>
-#include <mutex>
-#include <sstream>
+#include <chrono>    // for std::chrono
+#include <ctime>     // for std::tm, localtime_r, localtime_s
+#include <iomanip>   // for std::put_time
+#include <iostream>  // for std::cout, std::cerr
+#include <mutex>     // for std::mutex, std::lock_guard
+#include <ostream>   // for std::ostream
+#include <sstream>   // for std::ostringstream
+#include <string>    // for std::string
 
 namespace {
 
