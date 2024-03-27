@@ -60,17 +60,23 @@ template <typename T>
 template <typename T>
 [[nodiscard]] std::string vector_to_string(const std::vector<T> &vec)
 {
+    // Create a string stream and add the opening bracket
     std::ostringstream oss;
     oss << "[";
+
+    // Add each item with a comma and space
     for (const auto &item : vec) {
         oss << impl::format(item) << ", ";
     }
-    std::string str = oss.str();
+
+    // If not empty, move back 2 positions in the stream (equivalent to removing the trailing comma and space)
     if (!vec.empty()) {
-        str = str.substr(0, str.size() - 2);  // Remove the trailing comma and space
+        oss.seekp(-2, std::ios_base::end);
     }
-    str += "]";
-    return str;
+
+    // Add the closing bracket and return the string stream as a string
+    oss << "]";
+    return oss.str();
 }
 
 }  // namespace print
