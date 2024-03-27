@@ -8,6 +8,7 @@
 
 #include <string>  // for std::string
 
+namespace shared {
 namespace log {
 namespace impl {
 
@@ -47,6 +48,7 @@ void error(const std::string &caller, const std::string &message);
 
 }  // namespace impl
 }  // namespace log
+}  // namespace shared
 
 /**
  * @brief Macro to print a debug-level message to the standard output.
@@ -55,25 +57,25 @@ void error(const std::string &caller, const std::string &message);
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_DEBUG(message) log::impl::debug(__func__, message)
+#define LOG_DEBUG(message) shared::log::impl::debug(__func__, message)
 
 /**
  * @brief Macro to print an info-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_INFO(message) log::impl::info(__func__, message)
+#define LOG_INFO(message) shared::log::impl::info(__func__, message)
 
 /**
  * @brief Macro to print a warning-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_WARNING(message) log::impl::warning(__func__, message)
+#define LOG_WARNING(message) shared::log::impl::warning(__func__, message)
 
 /**
  * @brief Macro to print an error-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_ERROR(message) log::impl::error(__func__, message)
+#define LOG_ERROR(message) shared::log::impl::error(__func__, message)

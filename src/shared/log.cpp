@@ -97,24 +97,24 @@ void print_formatted(std::ostream &os, const std::string &level, const std::stri
 
 }  // namespace
 
-void log::impl::debug(const std::string &caller, const std::string &message)
+void shared::log::impl::debug(const std::string &caller, const std::string &message)
 {
     if (globals::verbose) {
         print_formatted(std::cout, "DEBUG  ", caller, message);
     }
 }
 
-void log::impl::info(const std::string &caller, const std::string &message)
+void shared::log::impl::info(const std::string &caller, const std::string &message)
 {
     print_formatted(std::cout, "INFO   ", caller, message);
 }
 
-void log::impl::warning(const std::string &caller, const std::string &message)
+void shared::log::impl::warning(const std::string &caller, const std::string &message)
 {
     print_formatted(std::cerr, "WARNING", caller, message);
 }
 
-void log::impl::error(const std::string &caller, const std::string &message)
+void shared::log::impl::error(const std::string &caller, const std::string &message)
 {
     print_formatted(std::cerr, "ERROR  ", caller, message);
 }

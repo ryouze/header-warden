@@ -6,6 +6,7 @@
 
 #pragma once
 
+namespace shared {
 namespace globals {
 
 /**
@@ -14,3 +15,4 @@ namespace globals {
 inline bool verbose = false;
 
 }  // namespace globals
+}
