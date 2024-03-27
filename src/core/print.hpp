@@ -22,7 +22,10 @@ namespace impl {
  *
  * @tparam T Type of the item, convertible to a string (e.g., "int").
  * @param item Item to convert to a string (e.g., "5").
+ *
  * @return String representation of the item (e.g., "5").
+ *
+ * @note The type T must have a valid overload for `std::to_string`.
  */
 template <typename T>
 [[nodiscard]] inline std::string format(const T &item)
@@ -36,6 +39,7 @@ template <typename T>
  * This simply adds double quotes around the string.
  *
  * @param item String to convert to a quoted string (e.g., "hello").
+ *
  * @return Quoted string representation of the string (e.g., "\"hello\"").
  */
 [[nodiscard]] inline std::string format(const std::string &item)
