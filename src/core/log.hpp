@@ -35,7 +35,10 @@ enum class LogLevel {
  * @param line Line number in the source code file (e.g., "42").
  * @param message Message to print (e.g., "hello").
  */
-void log(const LogLevel level, const std::string &caller, const long line, const std::string &message);
+void log(const LogLevel level,
+         const std::string &caller,
+         const long line,
+         const std::string &message);
 
 }  // namespace impl
 }  // namespace log

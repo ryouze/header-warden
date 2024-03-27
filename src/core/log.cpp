@@ -90,7 +90,11 @@ namespace {
  * @param line Line number in the source code file (e.g., "42").
  * @param message Message to log (e.g., "hello").
  */
-void print_formatted(std::ostream &os, const std::string &level, const std::string &caller, const int line, const std::string &message)
+void print_formatted(std::ostream &os,
+                     const std::string &level,
+                     const std::string &caller,
+                     const long line,
+                     const std::string &message)
 {
     // Lock the output stream to prevent interleaved output
     static std::mutex mtx;
@@ -102,7 +106,10 @@ void print_formatted(std::ostream &os, const std::string &level, const std::stri
 
 }  // namespace
 
-void core::log::impl::log(const core::log::impl::LogLevel level, const std::string &caller, const long line, const std::string &message)
+void core::log::impl::log(const core::log::impl::LogLevel level,
+                          const std::string &caller,
+                          const long line,
+                          const std::string &message)
 {
     switch (level) {
     case core::log::impl::LogLevel::DEBUG:
