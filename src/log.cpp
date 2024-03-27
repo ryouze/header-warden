@@ -12,23 +12,44 @@ namespace {
 /**
  * @brief Private helper function to get the current time.
  *
- * @return String representing the current time in the "YYYY-MM-DD HH:MM:SS.sss" format (e.g., "2024-01-01 12:34:56.789").
+ * This computes the current time only once per second to improve performance.
+ *
+ * @return String representing the current time in the "YYYY-MM-DD HH:MM:SS" format (e.g., "2024-01-01 12:34:56").
  */
 std::string get_current_time()
 {
-    // Get the current time and convert to a time_t object
-    const auto now = std::chrono::system_clock::now();
-    const auto now_c = std::chrono::system_clock::to_time_t(now);
+    static auto now = std::chrono::system_clock::now();
+    static auto last_time = now;
 
-    // Get the milliseconds part of the time
-    const auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-
-    // Create a string stream and format the time as "YYYY-MM-DD HH:MM:SS.sss"
+    auto now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm *time_info = std::localtime(&now_c);
     std::ostringstream oss;
-    oss << std::put_time(std::localtime(&now_c), "%Y-%m-%d %H:%M:%S") << '.' << std::setw(3) << std::setfill('0') << now_ms.count();
+    oss << std::put_time(time_info, "%Y-%m-%d %H:%M:%S");
+    static std::string last_timestamp = oss.str();
 
-    // Return the formatted time
-    return oss.str();
+    // Get the current time
+    now = std::chrono::system_clock::now();
+
+    // Check if the current time is still within the same second as the last computed timestamp
+    if (now - last_time < std::chrono::seconds(1)) {
+        // If it is, reuse the last computed timestamp
+        // std::cout << "REUSED\n";
+        return last_timestamp;
+    }
+
+    // If it's not, compute a new timestamp
+    now_c = std::chrono::system_clock::to_time_t(now);
+
+    time_info = std::localtime(&now_c);
+    oss.str("");
+    oss << std::put_time(time_info, "%Y-%m-%d %H:%M:%S");
+
+    // Store the new timestamp and the time when it was computed
+    last_timestamp = oss.str();
+    last_time = now;
+
+    // std::cout << "NEW\n";
+    return last_timestamp;
 }
 
 /**
@@ -46,24 +67,24 @@ void print_formatted(std::ostream &os, const std::string &level, const std::stri
 
 }  // namespace
 
-void log::impl::debug_impl(const std::string &caller, const std::string &message)
+void log::impl::debug(const std::string &caller, const std::string &message)
 {
     if (globals::verbose) {
         print_formatted(std::cout, "DEBUG  ", caller, message);
     }
 }
 
-void log::impl::info_impl(const std::string &caller, const std::string &message)
+void log::impl::info(const std::string &caller, const std::string &message)
 {
     print_formatted(std::cout, "INFO   ", caller, message);
 }
 
-void log::impl::warning_impl(const std::string &caller, const std::string &message)
+void log::impl::warning(const std::string &caller, const std::string &message)
 {
     print_formatted(std::cerr, "WARNING", caller, message);
 }
 
-void log::impl::error_impl(const std::string &caller, const std::string &message)
+void log::impl::error(const std::string &caller, const std::string &message)
 {
     print_formatted(std::cerr, "ERROR  ", caller, message);
 }
