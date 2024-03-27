@@ -52,6 +52,7 @@ add_compile_options(-Wall -Wextra -Werror -Wpedantic)
 set(SOURCES
     src/args.cpp
     src/disk.cpp
+    src/log.cpp
     src/main.cpp
     src/net.cpp
 )
