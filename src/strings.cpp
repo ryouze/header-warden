@@ -48,7 +48,7 @@ std::string strings::to_lower(const std::string &str)
                    [](unsigned char c) { return std::tolower(c); });
 
     // Return the lowercase string (RVO)
-    LOG_DEBUG("Lowercase string: '" + lower_str + '\'');
+    LOG_DEBUG("Lowercased string: '" + lower_str + '\'');
     return lower_str;
 }
 

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "core/log.hpp"
+
 #include <ios>      // for std::ios_base
 #include <sstream>  // for std::ostringstream
 #include <string>   // for std::string, std::to_string
@@ -60,6 +62,8 @@ template <typename T>
 template <typename T>
 [[nodiscard]] std::string vector_to_string(const std::vector<T> &vec)
 {
+    LOG_DEBUG("Converting vector of '" + std::to_string(vec.size()) + "' items to string");
+
     // Create a string stream and add the opening bracket
     std::ostringstream oss;
     oss << "[";
@@ -74,9 +78,13 @@ template <typename T>
         oss.seekp(-2, std::ios_base::end);
     }
 
-    // Add the closing bracket and return the string stream as a string
+    // Add the closing bracket and turn the string stream into a string
     oss << "]";
-    return oss.str();
+    const std::string result = oss.str();
+
+    // Return the string representation of the vector
+    LOG_DEBUG("Vector to string: '" + result + '\'');
+    return result;
 }
 
 /**
