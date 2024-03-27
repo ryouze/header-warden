@@ -6,8 +6,9 @@
 
 #pragma once
 
-#include <sstream>
-#include <string>
+#include <sstream>  // for std::ostringstream
+#include <string>   // for std::string, std::to_string
+#include <vector>   // for std::vector
 
 namespace core {
 namespace print {
