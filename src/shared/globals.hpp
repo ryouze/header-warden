@@ -1,7 +1,7 @@
 /**
  * @file globals.hpp
  *
- * @brief Global variables.
+ * @brief Global variables shared across the application.
  */
 
 #pragma once
@@ -15,4 +15,4 @@ namespace globals {
 inline bool verbose = false;
 
 }  // namespace globals
-}
+}  // namespace shared
