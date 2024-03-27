@@ -1,4 +1,9 @@
+/**
+ * @file net.cpp
+ */
+
 #include "net.hpp"
+#include "shared/log.hpp"
 
 #include <sstream>        // for std::ostringstream
 #include <string>         // for std::string
@@ -6,6 +11,8 @@
 
 std::string net::create_cpp_reference_link(const std::string &name)
 {
+    LOG_DEBUG("Creating a link to cppreference.com for the function '" + name + '\'');
+
     // URL encoding map
     // This list is not exhaustive, and only includes the characters that are most likely to appear in function names
     // If the link is broken, it's not critical, as it's primarily used as a suggestion to add include headers for standard library functions
@@ -45,10 +52,12 @@ std::string net::create_cpp_reference_link(const std::string &name)
         if (encoded != url_encoding.end()) {
             // If found, add the URL-encoded version of the character (e.g., "%3A")
             link << encoded->second;
+            LOG_DEBUG("Using encoded character: " + encoded->second);
         }
         else {
             // Otherwise, add the original character (e.g., ":")
             link << character;
+            LOG_DEBUG("Using original character: " + std::string(1, character));
         }
     }
 
@@ -56,5 +65,7 @@ std::string net::create_cpp_reference_link(const std::string &name)
     link << "&ia=web";
 
     // Return the link as a string
-    return link.str();
+    const std::string result = link.str();
+    LOG_DEBUG("Created link: " + result);
+    return result;
 }
