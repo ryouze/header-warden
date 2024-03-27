@@ -1,12 +1,7 @@
 /**
  * @file log.hpp
+ *
  * @brief Logging utilities for the application.
- *
- * This header file provides a set of logging utilities for the application. It defines a set of macros (`LOG_DEBUG`, `LOG_INFO`, `LOG_WARNING`, and `LOG_ERROR`) that print messages to the standard output or standard error, depending on the log level. These macros automatically include the name of the calling function and the message to print.
- *
- * The actual printing is done by a set of functions (`debug_impl`, `info_impl`, `warning_impl`, and `error_impl`) in the `log::impl` namespace. These functions should not be called directly; instead, use the `LOG_DEBUG`, `LOG_INFO`, `LOG_WARNING`, and `LOG_ERROR` macros.
- *
- * The `LOG_DEBUG` macro only prints the message if the global variable `globals::verbose` is set to `true`.
  */
 #pragma once
 
