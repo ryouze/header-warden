@@ -10,7 +10,7 @@
  */
 #pragma once
 
-#include <string>
+#include <string>  // for std::string
 
 namespace log {
 namespace impl {
@@ -23,7 +23,7 @@ namespace impl {
  * @param caller Name of the calling function (e.g., "main").
  * @param message Message to print (e.g., "hello").
  */
-void debug_impl(const std::string &caller, const std::string &message);
+void debug(const std::string &caller, const std::string &message);
 
 /**
  * @brief Print an info-level message to the standard output.
@@ -31,7 +31,7 @@ void debug_impl(const std::string &caller, const std::string &message);
  * @param caller Name of the calling function (e.g., "main").
  * @param message Message to print (e.g., "hello").
  */
-void info_impl(const std::string &caller, const std::string &message);
+void info(const std::string &caller, const std::string &message);
 
 /**
  * @brief Print a warning-level message to the standard output.
@@ -39,7 +39,7 @@ void info_impl(const std::string &caller, const std::string &message);
  * @param caller Name of the calling function (e.g., "main").
  * @param message Message to print (e.g., "hello").
  */
-void warning_impl(const std::string &caller, const std::string &message);
+void warning(const std::string &caller, const std::string &message);
 
 /**
  * @brief Print an error-level message to the standard output.
@@ -47,7 +47,7 @@ void warning_impl(const std::string &caller, const std::string &message);
  * @param caller Name of the calling function (e.g., "main").
  * @param message Message to print (e.g., "hello").
  */
-void error_impl(const std::string &caller, const std::string &message);
+void error(const std::string &caller, const std::string &message);
 
 }  // namespace impl
 }  // namespace log
@@ -59,25 +59,25 @@ void error_impl(const std::string &caller, const std::string &message);
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_DEBUG(message) log::debug_impl(__func__, message)
+#define LOG_DEBUG(message) log::impl::debug(__func__, message)
 
 /**
  * @brief Macro to print an info-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_INFO(message) log::info_impl(__func__, message)
+#define LOG_INFO(message) log::impl::info(__func__, message)
 
 /**
  * @brief Macro to print a warning-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_WARNING(message) log::warning_impl(__func__, message)
+#define LOG_WARNING(message) log::impl::warning(__func__, message)
 
 /**
  * @brief Macro to print an error-level message to the standard output.
  *
  * @param message Message to print (e.g., "hello").
  */
-#define LOG_ERROR(message) log::error_impl(__func__, message)
+#define LOG_ERROR(message) log::impl::error(__func__, message)
