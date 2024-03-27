@@ -12,22 +12,28 @@ namespace {
 /**
  * @brief Private helper function to convert a time point to a formatted timestamp string.
  *
+ * This is thread-safe.
+ *
  * @param tp Time point to convert.
  * @return String representing the time point in the "YYYY-MM-DD HH:MM:SS" format.
  */
 std::string compute_timestamp(const std::chrono::system_clock::time_point &tp)
 {
     // Convert the time point to a time_t structure
-    auto tp_c = std::chrono::system_clock::to_time_t(tp);
+    const auto tp_c = std::chrono::system_clock::to_time_t(tp);
 
     // Convert the time_t structure to a tm structure
-    std::tm *time_info = std::localtime(&tp_c);
+    // This uses the appropriate function based on the operating system, because std::localtime is not thread-safe
+    std::tm time_info;
+#ifdef _WIN32  // Windows (32-bit and 64-bit)
+    localtime_s(&time_info, &tp_c);
+#else  // POSIX
+    localtime_r(&tp_c, &time_info);
+#endif
 
-    // Create an output string stream
+    // Create an output string stream and format the tm structure into it
     std::ostringstream oss;
-
-    // Format the tm structure into the string stream in the "YYYY-MM-DD HH:MM:SS" format
-    oss << std::put_time(time_info, "%Y-%m-%d %H:%M:%S");
+    oss << std::put_time(&time_info, "%Y-%m-%d %H:%M:%S");
 
     // Return the formatted timestamp string
     return oss.str();
