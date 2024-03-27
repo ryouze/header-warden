@@ -52,6 +52,23 @@ std::string strings::to_lower(const std::string &str)
     return lower_str;
 }
 
+std::string remove_comments(const std::string &str)
+{
+    LOG_DEBUG("Removing comments from string '" + str + '\'');
+
+    // Create copy of the input string (so we can use RVO when returning the result)
+    std::string no_comments = str;
+
+    // Find index of "//" in the string, then remove everything from the index to the end of the string
+    if (const auto index = str.find("//"); index != std::string_view::npos) {
+        no_comments.erase(index);
+    }
+
+    // Return the string without comments (RVO)
+    LOG_DEBUG("String without comments: '" + no_comments + '\'');
+    return no_comments;
+}
+
 std::string strings::create_cpp_reference_link(const std::string &name)
 {
     LOG_DEBUG("Creating a cppreference.com link for function '" + name + '\'');

@@ -88,7 +88,7 @@ template <typename T>
 }
 
 /**
- * @brief Remove leading and trailing whitespace from a string.
+ * @brief Remove leading and trailing whitespace from string.
  *
  * @param str String to trim (e.g., "  hello  ").
  *
@@ -104,6 +104,15 @@ template <typename T>
  * @return Lowercase string (e.g., "hello world").
  */
 [[nodiscard]] std::string to_lower(const std::string &str);
+
+/**
+ * @brief Remove comments from string.
+ *
+ * @param str String from which to remove comments (e.g., "int x = 5 // My comment").
+ *
+ * @return String without comments (e.g., "int x = 5").
+ */
+[[nodiscard]] std::string remove_comments(const std::string &str);
 
 /**
  * @brief Create a URL that links to a DuckDuckGo search for the name provided on cppreference.com.
