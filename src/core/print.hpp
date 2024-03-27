@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <ios>      // for std::ios_base
 #include <sstream>  // for std::ostringstream
 #include <string>   // for std::string, std::to_string
 #include <vector>   // for std::vector
