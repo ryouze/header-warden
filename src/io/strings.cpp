@@ -11,7 +11,7 @@
 #include <string>         // for std::string
 #include <unordered_map>  // for std::unordered_map
 
-std::string strings::trim_whitespace(const std::string &str)
+std::string io::strings::trim_whitespace(const std::string &str)
 {
     LOG_DEBUG("Trimming whitespace from string '" + str + '\'');
 
@@ -35,7 +35,7 @@ std::string strings::trim_whitespace(const std::string &str)
     return trimmed_str;
 }
 
-std::string strings::to_lower(const std::string &str)
+std::string io::strings::to_lower(const std::string &str)
 {
     LOG_DEBUG("Converting string '" + str + "' to lowercase");
 
@@ -52,7 +52,7 @@ std::string strings::to_lower(const std::string &str)
     return lower_str;
 }
 
-std::string strings::remove_comments(const std::string &str)
+std::string io::strings::remove_comments(const std::string &str)
 {
     LOG_DEBUG("Removing comments from string '" + str + '\'');
 
@@ -69,7 +69,7 @@ std::string strings::remove_comments(const std::string &str)
     return no_comments;
 }
 
-std::string strings::create_cpp_reference_link(const std::string &name)
+std::string io::strings::create_cpp_reference_link(const std::string &name)
 {
     LOG_DEBUG("Creating a cppreference.com link for function '" + name + '\'');
 

@@ -13,6 +13,7 @@
 #include <string>   // for std::string, std::to_string
 #include <vector>   // for std::vector
 
+namespace io {
 namespace strings {
 
 namespace impl {
@@ -124,3 +125,4 @@ template <typename T>
 [[nodiscard]] std::string create_cpp_reference_link(const std::string &name);
 
 }  // namespace strings
+}  // namespace io
