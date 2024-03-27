@@ -1,8 +1,9 @@
 /**
  * @file log.hpp
  *
- * @brief Logging utilities for the application.
+ * @brief Logging utilities.
  */
+
 #pragma once
 
 #include <string>  // for std::string

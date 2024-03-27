@@ -1,3 +1,9 @@
+/**
+ * @file net.hpp
+ *
+ * @brief Networking utilities.
+ */
+
 #pragma once
 
 #include <string>  // for std::string

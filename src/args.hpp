@@ -1,3 +1,9 @@
+/**
+ * @file args.hpp
+ *
+ * @brief Command-line argument parser.
+ */
+
 #pragma once
 
 #include <string>  // for std::string
