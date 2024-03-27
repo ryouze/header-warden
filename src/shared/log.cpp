@@ -24,7 +24,7 @@ namespace {
  * @param tp Time point to convert.
  * @return String representing the time point in the "YYYY-MM-DD HH:MM:SS" format.
  */
-std::string compute_timestamp(const std::chrono::system_clock::time_point &tp)
+[[nodiscard]] std::string compute_timestamp(const std::chrono::system_clock::time_point &tp)
 {
     // Convert the time point to a time_t structure
     const auto tp_c = std::chrono::system_clock::to_time_t(tp);
@@ -55,7 +55,7 @@ std::string compute_timestamp(const std::chrono::system_clock::time_point &tp)
  *
  * @return String representing the current time in the "YYYY-MM-DD HH:MM:SS" format (e.g., "2024-01-01 12:34:56").
  */
-std::string get_current_time()
+[[nodiscard]] std::string get_current_time()
 {
     // Lock the function to prevent multiple threads from computing the timestamp at the same time
     static std::mutex mtx;
