@@ -9,16 +9,9 @@
 #include "core/log.hpp"
 #include "strings.hpp"
 
-#include <algorithm>
-#include <cstddef>     // for std::size_t
-#include <filesystem>  // for std::filesystem
-#include <fstream>     // for std::ifstream
-#include <iterator>    // for std::istreambuf_iterator
-#include <regex>
-#include <sstream>    // for std::istringstream
-#include <stdexcept>  // for std::runtime_error
-#include <string>     // for std::string, std::getline, std::to_string
-#include <vector>     // for std::vector
+#include <cstddef>  // for std::size_t
+#include <string>   // for std::string
+#include <vector>   // for std::vector
 
 namespace io {
 namespace disk {
@@ -34,14 +27,14 @@ struct Line {
      * @param number Line number (e.g., "5").
      * @param text Line text (e.g., "std::string foo()").
      */
-    explicit Line(const size_t number,
+    explicit Line(const std::size_t number,
                   const std::string &text)
         : number(number), text(text) {}
 
     /**
      * @brief Line number (e.g., "5").
      */
-    const size_t number;
+    const std::size_t number;
 
     /**
      * @brief Line text (e.g., "std::string foo()").
@@ -146,102 +139,28 @@ class File {
      *
      * @param file_path Path to the file to load (e.g., "src/main.cpp").
      */
-    explicit File(const std::string &file_path)
-    {
-        // Load the file from disk and iterate over each line
-        for (const Line &line : load_lines(file_path)) {
-
-            // Print the original line, but operate on the modified line
-            LOG_DEBUG("Processing line no. " + std::to_string(line.number) + ": " + line.text);
-
-            // Strip leading and trailing whitespace from line, turn line lowercase
-            auto modified_line = strings::to_lower(strings::trim_whitespace(line.text));
-            LOG_DEBUG("Line after removing leading & trailing whitespace and turning it to lowercase: " + modified_line);
-
-            // Skip if the modified line is a comment or empty
-            if (modified_line.find("//") == 0 || modified_line.find("*") == 0 || modified_line.empty()) {
-                LOG_DEBUG("Skipping line, because the line is a comment or empty");
-                continue;
-            }
-
-            // Define the regex for an include directive and a function call
-            static const std::regex include_directive_regex(R"(#include\s*<\S+>)");
-            static const std::regex function_call_regex(R"(std::(\w+))");
-
-            // 1) Check if the line contains an include directive
-            std::smatch include_match;
-            const bool line_contains_include = std::regex_search(modified_line, include_match, include_directive_regex);
-
-            if (line_contains_include) {
-                LOG_DEBUG("Found include directive '" + include_match.str(0) + "'");
-            }
-
-            // 2) Get all std::function calls in the modified line
-            std::vector<std::string> function_matches;
-
-            // If line_contains_include is false, we remove comments to prevent false positives
-            if (!line_contains_include) {
-                modified_line = strings::remove_comments(modified_line);
-            }
-
-            // Create const iterators pointing to the start and end of the sequence of matches
-            std::sregex_iterator begin(modified_line.cbegin(), modified_line.cend(), function_call_regex), end;
-
-            // Use std::transform to iterate over each match in the sequence
-            std::transform(begin, end, std::back_inserter(function_matches),
-                           [](const std::smatch &match) {
-                               return match.str(0);
-                           });
-
-            if (function_matches.empty()) {
-                LOG_DEBUG("No std::function calls found in the line");
-            }
-            else {
-                LOG_DEBUG("Found the following std::function calls: " + strings::vector_to_string(function_matches));
-            }
-
-            // Categorize the result into containers
-            if (line_contains_include && !function_matches.empty()) {  // #include <iostream> // for std::cout, std::cerr
-                includes_with_functions.emplace_back(line, include_match.str(0), function_matches);
-            }
-            else if (line_contains_include) {  // #include <string>
-                bare_includes.emplace_back(line, include_match.str(0));
-            }
-            else if (!function_matches.empty()) {  // std::string
-                functions.emplace_back(line, function_matches);
-            }
-        }
-    }
+    explicit File(const std::string &file_path);
 
     /**
      * @brief Get the bare includes.
      *
      * @return Vector of bare include directives (e.g., "#include <iostream>").
      */
-    const std::vector<disk::BareInclude> &get_bare_includes() const
-    {
-        return bare_includes;
-    }
+    [[nodiscard]] const std::vector<disk::BareInclude> &get_bare_includes() const;
 
     /**
      * @brief Get the include directives with associated functions.
      *
      * @return Vector of include directives with associated functions (e.g., "#include <iostream> // for std::cout, std::cerr").
      */
-    const std::vector<disk::IncludeWithFunctions> &get_includes_with_functions() const
-    {
-        return includes_with_functions;
-    }
+    [[nodiscard]] const std::vector<disk::IncludeWithFunctions> &get_includes_with_functions() const;
 
     /**
      * @brief Get the functions.
      *
      * @return Vector of functions (e.g., "std::cout").
      */
-    const std::vector<disk::Functions> &get_functions() const
-    {
-        return functions;
-    }
+    [[nodiscard]] const std::vector<disk::Functions> &get_functions() const;
 
   private:
     /**
@@ -257,39 +176,7 @@ class File {
    *
    * @note The line numbers are 1-based.
    */
-    std::vector<Line> load_lines(const std::string &file_path)
-    {
-        // Throw if the file does not exist
-        if (!std::filesystem::exists(file_path)) {
-            throw std::runtime_error("File does not exist: " + file_path);
-        }
-
-        // Throw if the path is not a file
-        if (!std::filesystem::is_regular_file(file_path)) {
-            throw std::runtime_error("Path is not a file: " + file_path);
-        }
-
-        // Load a file from disk
-        LOG_DEBUG("Loading file from disk: " + file_path);
-        std::ifstream file(file_path);
-        if (!file) {
-            throw std::runtime_error("Failed to open file: " + file_path);
-        }
-
-        // Read the entire file into a string at once
-        std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-
-        // Split the content into lines, this is a bit more efficient than reading line by line
-        std::vector<Line> lines;
-        std::size_t line_number = 1;
-        std::istringstream stream(content);
-        for (std::string buffer; std::getline(stream, buffer); ++line_number) {
-            lines.emplace_back(line_number, buffer);
-        }
-
-        // Return the lines
-        return lines;
-    }
+    [[nodiscard]] std::vector<Line> load_lines(const std::string &file_path) const;
 
     /**
      * @brief Vector of bare include directives (e.g., "#include <iostream>").
