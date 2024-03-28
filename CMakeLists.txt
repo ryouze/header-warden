@@ -50,6 +50,7 @@ add_compile_options(-Wall -Wextra -Werror -Wpedantic)
 
 # Source files
 set(SOURCES
+    src/app.cpp
     src/core/args.cpp
     src/core/log.cpp
     src/io/disk.cpp
