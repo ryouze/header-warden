@@ -23,12 +23,12 @@ struct Line {
     /**
      * @brief Construct a new Line object.
      *
-     * @param number Line number (e.g., "5").
-     * @param text Line text (e.g., "std::string foo()").
+     * @param _number Line number (e.g., "5").
+     * @param _text Line text (e.g., "std::string foo()").
      */
-    explicit Line(const std::size_t number,
-                  const std::string &text)
-        : number(number), text(text) {}
+    explicit Line(const std::size_t _number,
+                  const std::string &_text)
+        : number(_number), text(_text) {}
 
     /**
      * @brief Line number (e.g., "5").
@@ -49,12 +49,12 @@ struct BareInclude {
     /**
      * @brief Construct a new BareInclude object.
      *
-     * @param line Line where the include directive is found.
-     * @param name Name of the included file (e.g., "#include <iostream>").
+     * @param _line Line where the include directive is found.
+     * @param _name Name of the included file (e.g., "#include <iostream>").
      */
-    BareInclude(const Line &line,
-                const std::string &name)
-        : line(line), name(name) {}
+    BareInclude(const Line &_line,
+                const std::string &_name)
+        : line(_line), name(_name) {}
 
     /**
      * @brief Line where the include directive is found.
@@ -75,14 +75,14 @@ struct IncludeWithFunctions {
     /**
      * @brief Construct a new IncludeWithFunctions object.
      *
-     * @param line Line where the include directive is found.
-     * @param name Name of the included file (e.g., "#include <iostream>").
-     * @param functions Functions associated with the include directive (e.g., "std::cout").
+     * @param _line Line where the include directive is found.
+     * @param _name Name of the included file (e.g., "#include <iostream>").
+     * @param _functions Functions associated with the include directive (e.g., "std::cout").
      */
-    IncludeWithFunctions(const Line &line,
-                         const std::string &name,
-                         const std::vector<std::string> &functions)
-        : line(line), name(name), functions(functions) {}
+    IncludeWithFunctions(const Line &_line,
+                         const std::string &_name,
+                         const std::vector<std::string> &_functions)
+        : line(_line), name(_name), functions(_functions) {}
 
     /**
      * @brief Line where the include directive is found.
@@ -108,12 +108,12 @@ struct Functions {
     /**
      * @brief Construct a new Functions object.
      *
-     * @param line Line where the function is found.
-     * @param functions Functions found on the line (e.g., "std::cout").
+     * @param _line Line where the function is found.
+     * @param _functions Functions found on the line (e.g., "std::cout").
      */
-    Functions(const Line &line,
-              const std::vector<std::string> &functions)
-        : line(line), functions(functions) {}
+    Functions(const Line &_line,
+              const std::vector<std::string> &_functions)
+        : line(_line), functions(_functions) {}
 
     /**
      * @brief Line where the function is found.
