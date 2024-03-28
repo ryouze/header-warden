@@ -50,11 +50,11 @@ add_compile_options(-Wall -Wextra -Werror -Wpedantic)
 
 # Source files
 set(SOURCES
-    src/args.cpp
-    src/disk.cpp
-    src/log.cpp
+    src/core/args.cpp
+    src/core/log.cpp
+    src/io/disk.cpp
+    src/io/strings.cpp
     src/main.cpp
-    src/net.cpp
 )
 
 # Executable definition
