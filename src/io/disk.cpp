@@ -73,7 +73,7 @@ namespace {
 io::disk::File::File(const std::string &file_path)
 {
     // Define the regex for an include directive (e.g., "#include <iostream>") and a function call (e.g., "std::cout")
-    static const std::regex include_directive_regex(R"(#include\s*<\S+>)");
+    static const std::regex include_directive_regex(R"(^\s*#include\s*<\S+>)");
     static const std::regex function_call_regex(R"(std::(\w+))");
 
     // Define containers for the different types of information
