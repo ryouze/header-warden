@@ -165,17 +165,17 @@ class File {
     /**
      * @brief Vector of bare include directives (e.g., "#include <iostream>").
      */
-    std::vector<disk::BareInclude> bare_includes;
+    std::vector<disk::BareInclude> bare_includes_;
 
     /**
      * @brief Vector of include directives whose associated functions are unused in the code (e.g., "#include <iostream> // for std::cout, std::cerr").
      */
-    std::vector<IncludeWithFunctions> unused_functions;
+    std::vector<IncludeWithFunctions> unused_functions_;
 
     /**
      * @brief Vector of functions that are used in the code, but not listed as a comment in any include directive (e.g., "std::cout").
      */
-    std::vector<Functions> missing_functions;
+    std::vector<Functions> missing_functions_;
 };
 
 }  // namespace disk

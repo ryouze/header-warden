@@ -119,7 +119,7 @@ io::disk::File::File(const std::string &file_path)
         }
         else if (line_contains_include) {  // e.g., "#include <string>""
             LOG_DEBUG("Found bare include directive");
-            this->bare_includes.emplace_back(current_line, include_directive);
+            this->bare_includes_.emplace_back(current_line, include_directive);
         }
         else if (!function_calls.empty()) {  // e.g., "std::string"
             LOG_DEBUG("Found functions");
@@ -139,7 +139,7 @@ io::disk::File::File(const std::string &file_path)
             }
         }
         if (!functions_not_referenced.empty()) {
-            this->unused_functions.push_back({include_with_associated_functions.line, include_with_associated_functions.name, functions_not_referenced});
+            this->unused_functions_.push_back({include_with_associated_functions.line, include_with_associated_functions.name, functions_not_referenced});
         }
     }
 
@@ -153,7 +153,7 @@ io::disk::File::File(const std::string &file_path)
     for (const auto &function_in_file : temp_functions) {
         for (const auto &function_name : function_in_file.functions) {
             if (functions_in_include_directives.find(function_name) == functions_in_include_directives.cend()) {
-                this->missing_functions.push_back({function_in_file.line, {function_name}});
+                this->missing_functions_.push_back({function_in_file.line, {function_name}});
             }
         }
     }
@@ -161,15 +161,15 @@ io::disk::File::File(const std::string &file_path)
 
 const std::vector<io::disk::BareInclude> &io::disk::File::get_bare_includes() const
 {
-    return this->bare_includes;
+    return this->bare_includes_;
 }
 
 const std::vector<io::disk::IncludeWithFunctions> &io::disk::File::get_unused_functions() const
 {
-    return this->unused_functions;
+    return this->unused_functions_;
 }
 
 const std::vector<io::disk::Functions> &io::disk::File::get_missing_functions() const
 {
-    return this->missing_functions;
+    return this->missing_functions_;
 }
