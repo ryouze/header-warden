@@ -60,7 +60,7 @@ std::string io::strings::remove_comments(const std::string &str)
     std::string no_comments = str;
 
     // Find index of "//" in the string, then remove everything from the index to the end of the string
-    if (const auto index = str.find("//"); index != std::string_view::npos) {
+    if (const auto index = str.find("//"); index != std::string::npos) {
         no_comments.erase(index);
     }
 
