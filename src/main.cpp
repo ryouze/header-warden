@@ -6,8 +6,6 @@
 #include "core/args.hpp"
 #include "core/globals.hpp"
 #include "core/log.hpp"
-#include "io/disk.hpp"
-#include "io/strings.hpp"
 
 #include <algorithm>
 #include <filesystem>
