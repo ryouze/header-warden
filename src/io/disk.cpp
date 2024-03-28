@@ -42,6 +42,11 @@ namespace {
         throw std::runtime_error("File does not exist: " + file_path);
     }
 
+    // Throw if the path is a directory
+    if (std::filesystem::is_directory(file_path)) {
+        throw std::runtime_error("Path is a directory, not a file: " + file_path);
+    }
+
     // Throw if the path is not a file
     if (!std::filesystem::is_regular_file(file_path)) {
         throw std::runtime_error("Path is not a file: " + file_path);
