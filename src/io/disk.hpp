@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "core/log.hpp"
+#include "../core/log.hpp"
 #include "strings.hpp"
 
 #include <cstddef>  // for std::size_t

@@ -3,7 +3,7 @@
  */
 
 #include "disk.hpp"
-#include "core/log.hpp"
+#include "../core/log.hpp"
 #include "strings.hpp"
 
 #include <algorithm>   // for std::transform
@@ -18,7 +18,7 @@
 #include <string>      // for std::string, std::getline, std::to_string
 #include <vector>      // for std::vector
 
-explicit io::disk::File::File(const std::string &file_path)
+io::disk::File::File(const std::string &file_path)
 {
     // Define the regex for an include directive (e.g., "#include <iostream>") and a function call (e.g., "std::cout")
     static const std::regex include_directive_regex(R"(#include\s*<\S+>)");

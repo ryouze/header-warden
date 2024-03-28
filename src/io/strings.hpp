@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "core/log.hpp"
+#include "../core/log.hpp"
 
 #include <ios>      // for std::ios_base
 #include <sstream>  // for std::ostringstream

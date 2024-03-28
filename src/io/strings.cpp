@@ -3,7 +3,7 @@
  */
 
 #include "strings.hpp"
-#include "core/log.hpp"
+#include "../core/log.hpp"
 
 #include <algorithm>      // for std::transform
 #include <cctype>         // for std::tolower
