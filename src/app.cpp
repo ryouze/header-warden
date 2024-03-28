@@ -7,7 +7,7 @@
 #include "io/disk.hpp"
 #include "io/strings.hpp"
 
-#include <sstream>  // for std::ostringstream
+#include <sstream>  // for std::stringstream
 #include <string>   // for std::string
 
 std::string app::get_report(const std::string &file_path)

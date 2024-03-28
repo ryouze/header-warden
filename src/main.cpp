@@ -7,13 +7,10 @@
 #include "core/globals.hpp"
 #include "core/log.hpp"
 
-#include <algorithm>
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <regex>
-#include <sstream>
-#include <unordered_set>
+#include <cstdlib>    // for std::exit, EXIT_FAILURE
+#include <exception>  // for std::exception
+#include <ios>        // for std::ios_base
+#include <iostream>   // for std::cout
 
 /**
  * @brief Entry-point of the application.
