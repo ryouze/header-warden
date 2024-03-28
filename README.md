@@ -46,28 +46,27 @@ header-warden addresses this by encouraging the explicit listing of all standard
 
 After running header-warden, you will receive a report that lists all standard library functions used in your code, along with the corresponding `#include` directives. This will help you ensure that all standard library functions are correctly listed as comments after the `#include` directive. Links to [cppreference.com](https://en.cppreference.com/) are also provided for missing functions, which makes it easy to find the correct header.
 
+What you do with this information is completely up to you. You can choose to add the missing functions to the comments, or you can ignore them. The goal is to make you aware of the potential issues in your code.
+
 ```
---------------------------------------------------------------------------------
-##- main.cpp: BARE INCLUDES -##
+-- 1) BARE INCLUDES --
 
-2| #include <iostream>
+8| #include <iostream>
 -> Bare include directive.
--> Add a comment to "#include <iostream>" that lists which functions depend on it, e.g., "#include <iostream> // for std::foo, std::bar".
+-> Add a comment to '#include <iostream>' that lists which functions depend on it, e.g., '#include <iostream>' // for std::foo, std::bar'.
 
---------------------------------------------------------------------------------
-##- main.cpp: UNUSED FUNCTIONS -##
+-- 2) UNUSED FUNCTIONS --
 
-1| #include <cstdlib>  // for std::exit, std::test, std::test2
+11| #include <algorithm>  // for std::find
 -> Unused functions listed as comments.
--> Remove the following functions from comments of the "#include <cstdlib>" include directive: "std::test", "std::test2".
+-> Remove the following functions from comments of the '#include <algorithm>' include directive: ["std::find"]
 
---------------------------------------------------------------------------------
-##- main.cpp: UNLISTED FUNCTIONS -##
+-- 3) UNLISTED FUNCTIONS --
 
-4| std::vector<int> foo()
+31|     std::sort(result.begin(), result.end());
 -> Unlisted function.
--> Add "std::vector" as a comment to the include directives, e.g., "#include <foo> // for std::vector".
--> Reference: https://duckduckgo.com/?sites=cppreference.com&q=std%3A%3Avector&ia=web
+-> Add 'std::sort' as a comment to the include directives, e.g., "#include <foo> // for std::sort"
+-> Reference: https://duckduckgo.com/?sites=cppreference.com&q=std%3A%3Asort&ia=web
 ```
 
 **Note:** The program' only analyzes comments that are directly associated with an include directive. For instance, if there's a comment in a line such as `int x = 5; // Use std::cout to print it`, the `std::cout` within the comment will not be taken into account by the program. It only becomes relevant if it's linked with an include directive, like in `#include <iostream>  // for std::cout`. Similarly, lines that are commented out, such as `// std::cerr << "ERROR!\n";`, or comments in documentation format like `* @param is_verbose If true, print with std::cout.`, are also ignored by the program. This approach ensures that your commented out code or documentation comments do not lead to false positives.
@@ -77,7 +76,7 @@ After running header-warden, you will receive a report that lists all standard l
 
 - Written in modern C++ (C++17).
 - Comprehensive documentation with doxygen-style comments.
-- No third-party dependencies.
+- No third-party dependencies (with custom thread-safe logger and argument parser).
 - Automatic generation of links to [cppreference.com](https://en.cppreference.com/) for standard library functions.
 
 
@@ -85,7 +84,7 @@ After running header-warden, you will receive a report that lists all standard l
 
 This project has been tested on the following systems:
 
-- MacOS 14.3 (Sonoma)
+- MacOS 14.4 (Sonoma)
 - Debian 12 (Bookworm)
 
 
@@ -132,23 +131,25 @@ To analyze a file, pass its filepath as a command line argument. Each file will 
 ```
 
 ```
---------------------------------------------------------------------------------
-##- main.cpp: BARE INCLUDES -##
+2024-03-28 03:37:23 | INFO    | main:39 - ##- ../example.cpp -##
 
---------------------------------------------------------------------------------
-##- main.cpp: UNUSED FUNCTIONS -##
+-- 1) BARE INCLUDES --
 
-6| #include <string>     // for std::string, std::to_string
+8| #include <iostream>
+-> Bare include directive.
+-> Add a comment to '#include <iostream>' that lists which functions depend on it, e.g., '#include <iostream>' // for std::foo, std::bar'.
+
+-- 2) UNUSED FUNCTIONS --
+
+11| #include <algorithm>  // for std::find
 -> Unused functions listed as comments.
--> Remove the following functions from comments of the "#include <string>" include directive: "std::to_string".
+-> Remove the following functions from comments of the '#include <algorithm>' include directive: ["std::find"]
+
+-- 3) UNLISTED FUNCTIONS --
+
+-> No unlisted functions found.
 
 --------------------------------------------------------------------------------
-##- main.cpp: UNLISTED FUNCTIONS -##
-
-71|     std::copy_if(this->args_.begin(), this->args_.end(), std::back_inserter(positional_args),
--> Unlisted function.
--> Add "std::back_inserter" as a comment to the include directives, e.g., "#include <foo> // for std::back_inserter".
--> Reference: https://duckduckgo.com/?sites=cppreference.com&q=std%3A%3Aback_inserter&ia=web
 ```
 
 You can also use wildcards to analyze multiple files at once.
@@ -157,51 +158,25 @@ You can also use wildcards to analyze multiple files at once.
 ./header-warden *.cpp
 ./header-warden *.hpp
 ./header-warden *.h
+./header-warden */*.*
 ```
 
-If no arguments are provided (or `--help` flag is used), the program will print the help message.
+Or you can specify the path to the files.
+
+```bash
+./header-warden ../src/*/*.*
+```
+
+If no arguments are provided (or `--help|-h` flag is used), the program will print the help message.
 
 ```bash
 ./header-warden --help
 ```
 
-If a verbose (`--verbose`) flag is provided, the program outputs the full code with line-by-line categorization. This is useful for debugging.
+If a verbose (`--verbose|-v`) flag is provided, the program outputs debug information, including the comparison of before, and after removing whitespace, categorization of lines, and the encoding of the function names when creating URLs.
 
 ```bash
 ./header-warden main.cpp --verbose
-```
-
-```
---------------------------------------------------------------------------------
-##- main.cpp: SOURCE CODE -##
-
-1| #include <cstdlib>  // for std::exit, std::test, std::test2
--> Include directive with listed functions as a comment.
-2| #include <iostream>
--> Bare include directive.
-3|
--> Nothing.
-4| std::vector<int> foo()
--> Standard library functions.
-5| {
--> Nothing.
-6|     return std::vector<int>{1, 2, 3};
--> Standard library functions.
-7| }
--> Nothing.
-8|
--> Nothing.
-9| std::exit(exit_failure);
--> Standard library functions.
-10| ;
--> Nothing.
-
---------------------------------------------------------------------------------
-##- main.cpp: BARE INCLUDES -##
-
-2| #include <iostream>
--> Bare include directive.
-...
 ```
 
 ## Contributing
