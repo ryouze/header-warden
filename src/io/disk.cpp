@@ -32,7 +32,7 @@ explicit io::disk::File::File(const std::string &file_path)
 
         // Strip leading and trailing whitespace from line, turn line lowercase
         std::string processed_line = strings::to_lower(strings::trim_whitespace(current_line.text));
-        LOG_DEBUG("Line after removing leading & trailing whitespace and turning it to lowercase: " + processed_line);
+        // LOG_DEBUG("Line after removing leading & trailing whitespace and turning it to lowercase: " + processed_line);
 
         // Skip if the processed line is a comment or empty
         if (processed_line.find("//") == 0 || processed_line.find("*") == 0 || processed_line.empty()) {
@@ -46,9 +46,6 @@ explicit io::disk::File::File(const std::string &file_path)
         const bool line_contains_include = std::regex_search(processed_line, include_match, include_directive_regex);
         if (line_contains_include) {
             include_directive = include_match.str(0);
-            LOG_DEBUG("Found include directive '" + include_directive + "'");
-            // Remove the include directive from the processed line to avoid matching it again
-            processed_line.erase(processed_line.begin(), processed_line.begin() + include_directive.length());
         }
 
         // Get all std::function calls in the processed line
@@ -59,21 +56,17 @@ explicit io::disk::File::File(const std::string &file_path)
                            return match.str(0);
                        });
 
-        if (function_calls.empty()) {
-            LOG_DEBUG("No function calls found in the line");
-        }
-        else {
-            LOG_DEBUG("Found the following function calls: " + strings::vector_to_string(function_calls));
-        }
-
         // Categorize the result into containers
         if (line_contains_include && !function_calls.empty()) {  // e.g., "#include <iostream> // for std::cout, std::cerr"
+            LOG_DEBUG("Found include directive with associated functions");
             this->includes_with_functions.emplace_back(current_line, include_directive, function_calls);
         }
         else if (line_contains_include) {  // e.g., "#include <string>""
+            LOG_DEBUG("Found bare include directive");
             this->bare_includes.emplace_back(current_line, include_directive);
         }
         else if (!function_calls.empty()) {  // e.g., "std::string"
+            LOG_DEBUG("Found functions");
             this->functions.emplace_back(current_line, function_calls);
         }
     }
