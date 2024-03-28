@@ -108,6 +108,11 @@ io::disk::File::File(const std::string &file_path)
         if (line_contains_include) {
             include_directive = include_match.str(0);
         }
+        // If the line does not contain an include directive, remove comments to prevent false positives
+        // E.g., "int x = 5; // Use std::cout to print it" -> "int x = 5;
+        else {
+            processed_line = strings::remove_comments(processed_line);
+        }
 
         // Get all std::function calls in the processed line
         std::vector<std::string> function_calls;
