@@ -158,7 +158,7 @@ You can also use wildcards to analyze multiple files at once.
 ./header-warden *.cpp
 ./header-warden *.hpp
 ./header-warden *.h
-./header-warden */*.*
+./header-warden *.*
 ```
 
 Or you can specify the path to the files.
