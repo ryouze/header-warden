@@ -149,49 +149,34 @@ class File {
     [[nodiscard]] const std::vector<disk::BareInclude> &get_bare_includes() const;
 
     /**
-     * @brief Get the include directives with associated functions.
+     * @brief Get the unused functions.
      *
-     * @return Vector of include directives with associated functions (e.g., "#include <iostream> // for std::cout, std::cerr").
+     * @return Vector of include directives whose associated functions are unused in the code (e.g., "#include <iostream> // for std::cout, std::cerr").
      */
-    [[nodiscard]] const std::vector<disk::IncludeWithFunctions> &get_includes_with_functions() const;
+    [[nodiscard]] const std::vector<disk::IncludeWithFunctions> &get_unused_functions() const;
 
     /**
-     * @brief Get the functions.
+     * @brief Get the missing functions.
      *
-     * @return Vector of functions (e.g., "std::cout").
+     * @return Vector of functions that are used in the code, but not listed as a comment in any include directive (e.g., "std::cout").
      */
-    [[nodiscard]] const std::vector<disk::Functions> &get_functions() const;
+    [[nodiscard]] const std::vector<disk::Functions> &get_missing_functions() const;
 
   private:
-    /**
-   * @brief Load lines from a file and return them as a vector of Line objects.
-   *
-   * Each Line object contains the line number and text.
-   *
-   * @param file_path Path to the file to load (e.g., "src/main.cpp").
-   *
-   * @return Vector of Line objects, with each Line representing a single line in the file (e.g., "{Line(1, "#include <iostream>"), Line(2, "int main() {")").
-
-   * @throws std::runtime_error If the file_path does not exist, is not a regular file, or if there was an error opening the file.
-   *
-   * @note The line numbers are 1-based.
-   */
-    [[nodiscard]] std::vector<Line> load_lines(const std::string &file_path) const;
-
     /**
      * @brief Vector of bare include directives (e.g., "#include <iostream>").
      */
     std::vector<disk::BareInclude> bare_includes;
 
     /**
-     * @brief Vector of include directives with associated functions (e.g., "#include <iostream> // for std::cout, std::cerr").
+     * @brief Vector of include directives whose associated functions are unused in the code (e.g., "#include <iostream> // for std::cout, std::cerr").
      */
-    std::vector<disk::IncludeWithFunctions> includes_with_functions;
+    std::vector<IncludeWithFunctions> unused_functions;
 
     /**
-     * @brief Vector of functions (e.g., "std::cout").
+     * @brief Vector of functions that are used in the code, but not listed as a comment in any include directive (e.g., "std::cout").
      */
-    std::vector<disk::Functions> functions;
+    std::vector<Functions> missing_functions;
 };
 
 }  // namespace disk
