@@ -19,7 +19,7 @@ namespace impl {
 enum class LogLevel {
     DEBUG,
     INFO,
-    WARNING,
+    // WARNING,
     ERROR,
 };
 
@@ -60,12 +60,12 @@ void log(const LogLevel level,
  */
 #define LOG_INFO(message) core::log::impl::log(core::log::impl::LogLevel::INFO, __func__, __LINE__, message)
 
-/**
- * @brief Macro to print a warning-level message to the standard output.
- *
- * @param message Message to print (e.g., "hello").
- */
-#define LOG_WARNING(message) core::log::impl::log(core::log::impl::LogLevel::WARNING, __func__, __LINE__, message)
+// /**
+//  * @brief Macro to print a warning-level message to the standard output.
+//  *
+//  * @param message Message to print (e.g., "hello").
+//  */
+// #define LOG_WARNING(message) core::log::impl::log(core::log::impl::LogLevel::WARNING, __func__, __LINE__, message)
 
 /**
  * @brief Macro to print an error-level message to the standard output.

@@ -121,9 +121,9 @@ void core::log::impl::log(const core::log::impl::LogLevel level,
     case core::log::impl::LogLevel::INFO:
         print_formatted(std::cout, "INFO   ", caller, line, message);
         break;
-    case core::log::impl::LogLevel::WARNING:
-        print_formatted(std::cerr, "WARNING", caller, line, message);
-        break;
+    // case core::log::impl::LogLevel::WARNING:
+    //     print_formatted(std::cerr, "WARNING", caller, line, message);
+    //     break;
     case core::log::impl::LogLevel::ERROR:
         print_formatted(std::cerr, "ERROR  ", caller, line, message);
         break;
