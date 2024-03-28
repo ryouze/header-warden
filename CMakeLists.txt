@@ -46,7 +46,8 @@ add_compile_options(-Wall -Wextra -Werror -Wpedantic)
 # -Wno-c++98-compat: Disable C++98 compatibility warnings (target is C++17)
 # -Wno-c++98-compat-pedantic: Disable C++98 compatibility pedantic warnings (target is C++17)
 # -Wno-padded: Disable padding warnings
-#add_compile_options(-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded)
+# Wno-exit-time-destructors: Disable exit-time destructors warnings
+#add_compile_options(-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-exit-time-destructors)
 
 # Source files
 set(SOURCES
