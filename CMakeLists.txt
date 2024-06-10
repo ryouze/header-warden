@@ -1,4 +1,4 @@
-# Set minimum required version of CMake (3.20.1 properly supports Apple Sillicon)
+# Set minimum required version of CMake (3.20.1 properly supports Apple Silicon)
 cmake_minimum_required(VERSION 3.20.1)
 
 # Set project name and language
