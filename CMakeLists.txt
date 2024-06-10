@@ -92,7 +92,7 @@ if(NOT WIN32)
 endif()
 
 # Add install target
-install(TARGETS ${PROJECT_NAME})
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # Print the build type
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}.")
