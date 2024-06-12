@@ -19,6 +19,7 @@ namespace {
  * @brief Private helper function to convert a time point to a formatted timestamp string.
  *
  * @param tp Time point to convert.
+ *
  * @return String representing the time point in the "YYYY-MM-DD HH:MM:SS" format.
  */
 [[nodiscard]] std::string compute_timestamp(const std::chrono::system_clock::time_point &tp)

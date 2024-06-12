@@ -19,6 +19,7 @@ namespace {
  * @brief Private helper function to get a report of issues found in a file.
  *
  * @param file_path Path to the file to process (e.g., "src/app.hpp").
+ *
  * @return Report for the file. This is a formatted string that lists any issues found in the file.
  */
 [[nodiscard]] std::string get_report(const std::string &file_path)
