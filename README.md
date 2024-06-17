@@ -199,7 +199,7 @@ If no arguments are provided (or `--help|-h` flag is used), the program will pri
 header-warden --help
 ```
 
-If a verbose (`--verbose|-v`) flag is provided, the program outputs debug information, including the comparison of before, and after removing whitespace, categorization of lines, and the encoding of the function names when creating URLs.
+If the verbose (`--verbose|-v`) flag is provided, the program outputs debug information, including the comparison of before, and after removing whitespace, categorization of lines, and the encoding of the function names when creating URLs.
 
 ```bash
 header-warden main.cpp --verbose
