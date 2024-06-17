@@ -64,7 +64,7 @@ class ArgParser {
     //  *
     //  * @return Value of the argument (e.g., "data.txt").
     //  *
-    //  * @throws std::runtime_error if the argument does not exist.
+    //  * @throws std::runtime_error If the argument does not exist.
     //  */
     // [[nodiscard]] const std::string &value(const std::string &arg) const;
 
@@ -76,7 +76,7 @@ class ArgParser {
     //  *
     //  * @return Value of the argument (e.g., "data.txt").
     //  *
-    //  * @throws std::runtime_error if the argument does not exist.
+    //  * @throws std::runtime_error If the argument does not exist.
     //  */
     // [[nodiscard]] const std::string &value(const std::string &short_arg,
     //                                        const std::string &long_arg) const;
@@ -88,7 +88,7 @@ class ArgParser {
     //  *
     //  * @return Value of the argument (e.g., "data.txt").
     //  *
-    //  * @throws std::out_of_range if the index is out of range.
+    //  * @throws std::out_of_range If the index is out of range.
     //  */
     // [[nodiscard]] const std::string &position(const std::size_t index) const;
 
