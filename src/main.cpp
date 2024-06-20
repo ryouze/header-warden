@@ -2,7 +2,7 @@
  * @file main.cpp
  */
 
-#include <cstdlib>    // for std::exit, EXIT_FAILURE
+#include <cstdlib>    // for EXIT_FAILURE, EXIT_SUCCESS
 #include <exception>  // for std::exception
 #include <ios>        // for std::ios_base
 #include <iostream>   // for std::cout
@@ -31,19 +31,19 @@ int main(int argc, char **argv)
             // Initialize command-line arguments parser
             const core::args::ArgParser parser(argc, argv);
 
-            // If no arguments are provided or help is requested, display help message
+            // If no arguments are provided or help is requested, display help message and exit
             if (parser.empty() || parser.contains("-h", "--help")) {
                 std::cout << parser.get_help();
-                std::exit(EXIT_SUCCESS);
+                return EXIT_SUCCESS;
             }
 
             // Get positional arguments (i.e., arguments that are not preceded by a hyphen)
             files = parser.get_positional_arguments();
 
-            // If empty, display help message
+            // If empty, display help message and exit
             if (files.empty()) {
                 std::cout << parser.get_help();
-                std::exit(EXIT_FAILURE);
+                return EXIT_FAILURE;
             }
 
             // If "-v" or "--verbose" argument was passed, set the global verbose flag to true
@@ -73,11 +73,11 @@ int main(int argc, char **argv)
     }
     catch (const std::exception &e) {
         LOG_ERROR(std::string(e.what()));
-        std::exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
     catch (...) {
         LOG_ERROR("Unknown error");
-        std::exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
     return 0;
 }
