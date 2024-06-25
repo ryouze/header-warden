@@ -26,6 +26,8 @@ namespace {
 {
     static const std::string line_separator(80, '-');
 
+    bool has_issues = false;
+
     LOG_DEBUG("Processing file: " + file_path);
     const io::disk::File processed_file(file_path);
 
@@ -40,6 +42,7 @@ namespace {
             report_message << "-> No bare includes found.\n\n";
         }
         else {
+            has_issues = true;
             for (const auto &bare_include : bare_includes) {
                 report_message << bare_include.line.number << "| " << bare_include.line.text << '\n'
                                << "-> Bare include directive.\n"
@@ -56,6 +59,7 @@ namespace {
             report_message << "-> No unused functions found.\n\n";
         }
         else {
+            has_issues = true;
             for (const auto &unused_function : unused_functions) {
                 report_message << unused_function.line.number << "| " << unused_function.line.text << '\n'
                                << "-> Unused functions listed as comments.\n"
@@ -72,6 +76,7 @@ namespace {
             report_message << "-> No unlisted functions found.\n\n";
         }
         else {
+            has_issues = true;
             for (const auto &missing_function : missing_functions) {
                 for (const auto &function : missing_function.functions) {
                     report_message << missing_function.line.number << "| " << missing_function.line.text << '\n'
@@ -85,8 +90,14 @@ namespace {
 
     report_message << line_separator;
 
-    // Return the report message as a string
-    return report_message.str();
+    if (has_issues) {
+        // Return the report message as a string
+        return report_message.str();
+    }
+    else {
+        // Return only the header, plus a message indicating that no issues were found
+        return "##- " + file_path + " -##\n\n-> OK.\n\n" + line_separator;
+    }
 }
 
 }  // namespace
