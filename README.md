@@ -156,7 +156,7 @@ header-warden example.cpp
 ```
 
 ```
-2024-03-28 03:37:23 | INFO    | main:39 - ##- example.cpp -##
+2024-06-25 20:01:23 | INFO    | run:98 - ##- example.cpp -##
 
 -- 1) BARE INCLUDES --
 
@@ -172,7 +172,10 @@ header-warden example.cpp
 
 -- 3) UNLISTED FUNCTIONS --
 
--> No unlisted functions found.
+31|     std::sort(result.begin(), result.end());
+-> Unlisted function.
+-> Add 'std::sort' as a comment to the include directives, e.g., "#include <foo> // for std::sort"
+-> Reference: https://duckduckgo.com/?sites=cppreference.com&q=std%3A%3Asort&ia=web
 
 --------------------------------------------------------------------------------
 ```
