@@ -26,7 +26,8 @@ struct Line {
      */
     explicit Line(const std::size_t _number,
                   const std::string &_text)
-        : number(_number), text(_text) {}
+        : number(_number),
+          text(_text) {}
 
     /**
      * @brief Line number (e.g., "5").
@@ -52,7 +53,8 @@ struct BareInclude {
      */
     explicit BareInclude(const Line &_line,
                          const std::string &_name)
-        : line(_line), name(_name) {}
+        : line(_line),
+          name(_name) {}
 
     /**
      * @brief Line where the include directive is found.
@@ -80,7 +82,9 @@ struct IncludeWithFunctions {
     explicit IncludeWithFunctions(const Line &_line,
                                   const std::string &_name,
                                   const std::vector<std::string> &_functions)
-        : line(_line), name(_name), functions(_functions) {}
+        : line(_line),
+          name(_name),
+          functions(_functions) {}
 
     /**
      * @brief Line where the include directive is found.
@@ -111,7 +115,8 @@ struct Functions {
      */
     explicit Functions(const Line &_line,
                        const std::vector<std::string> &_functions)
-        : line(_line), functions(_functions) {}
+        : line(_line),
+          functions(_functions) {}
 
     /**
      * @brief Line where the function is found.
