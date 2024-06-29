@@ -4,12 +4,11 @@
 
 #include <algorithm>      // for std::transform, std::find
 #include <cstddef>        // for std::size_t
+#include <exception>      // for std::exception
 #include <filesystem>     // for std::filesystem
 #include <fstream>        // for std::ifstream
-#include <iterator>       // for std::istreambuf_iterator
 #include <iterator>       // for std::back_inserter
 #include <regex>          // for std::regex, std::smatch, std::regex_search, std::sregex_iterator
-#include <sstream>        // for std::istringstream
 #include <stdexcept>      // for std::runtime_error, std::invalid_argument
 #include <string>         // for std::string, std::getline, std::to_string
 #include <unordered_set>  // for std::unordered_set
@@ -27,49 +26,58 @@ namespace {
  *
  * Each Line object contains the line number and text.
  *
- * @param file_path Path to the file to load (e.g., "src/main.cpp").
+ * @param input_path Path to the file to load (e.g., "src/main.cpp").
  *
  * @return Vector of Line objects, with each Line representing a single line in the file (e.g., "{Line(1, "#include <iostream>"), Line(2, "int main() {")").
  *
- * @throws std::invalid_argument If the file_path does not exist or is a directory.
+ * @throws std::invalid_argument If the input_path does not exist or is a directory.
  * @throws std::runtime_error If the file cannot be opened for reading or if any other I/O error occurs.
  *
  * @note The line numbers are 1-based.
  */
-[[nodiscard]] std::vector<io::disk::Line> load_lines(const std::string &file_path)
+[[nodiscard]] std::vector<io::disk::Line> load_lines(const std::string &input_path)
 {
     // Error: Doesn't exist
-    if (!std::filesystem::exists(file_path)) {
-        throw std::invalid_argument("File does not exist: " + file_path);
+    if (!std::filesystem::exists(input_path)) {
+        throw std::invalid_argument("File does not exist: " + input_path);
     }
     // Error: Is a directory
-    else if (std::filesystem::is_directory(file_path)) {
-        throw std::invalid_argument("Path is a directory, not a file: " + file_path);
+    if (std::filesystem::is_directory(input_path)) {
+        throw std::invalid_argument("Path is a directory, not a file: " + input_path);
     }
+    // Otherwise, load the file
+    try {
+        // Open the file in read mode
+        LOG_DEBUG("Loading file from disk: " + input_path);
+        std::ifstream file(input_path);
 
-    // Open the file in read mode
-    LOG_DEBUG("Loading file from disk: " + file_path);
-    std::ifstream file(file_path);
+        // Error: File cannot be opened
+        if (!file) {
+            throw std::runtime_error("Failed to open file for reading");
+        }
 
-    // Error: File cannot be opened
-    if (!file) {
-        throw std::runtime_error("Failed to open file: " + file_path);
+        // Read the file line by line
+        std::vector<io::disk::Line> lines;
+        std::string buffer;
+        std::size_t line_number = 1;
+
+        while (std::getline(file, buffer)) {
+            lines.emplace_back(line_number++, buffer);  // Must be post-increment to start at 1
+        }
+
+        // Check if any error occurred during reading
+        if (file.bad()) {
+            throw std::runtime_error("File reading interrupted at line: " + std::to_string(line_number));
+        }
+
+        // Return shrunk vector (RVO)
+        LOG_DEBUG("Read '" + std::to_string(lines.size()) + "' lines");
+        lines.shrink_to_fit();
+        return lines;
     }
-
-    // Read the entire file into a string at once
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-
-    // Split the content into lines, this is a bit more efficient than reading line by line
-    std::vector<io::disk::Line> lines;
-    std::istringstream stream(content);
-    std::size_t line_number = 1;
-    for (std::string line; std::getline(stream, line); ++line_number) {
-        lines.emplace_back(line_number, line);
+    catch (const std::exception &e) {
+        throw std::runtime_error("Failed to read file '" + input_path + "' (" + std::string(e.what()) + ")");
     }
-
-    // Return shrunk vector of lines (RVO)
-    lines.shrink_to_fit();
-    return lines;
 }
 
 }  // namespace
