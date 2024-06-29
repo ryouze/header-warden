@@ -65,7 +65,7 @@ namespace {
             lines.emplace_back(line_number++, buffer);  // Must be post-increment to start at 1
         }
 
-        // Check if any error occurred during reading
+        // Error: After reading the file, the stream is in a bad state
         if (file.bad()) {
             throw std::runtime_error("File reading interrupted at line: " + std::to_string(line_number));
         }
@@ -85,8 +85,8 @@ namespace {
 io::disk::File::File(const std::string &file_path)
 {
     // Define the regex for an include directive (e.g., "#include <iostream>") and a function call (e.g., "std::cout")
-    static const std::regex include_directive_regex(R"(^\s*#include\s*<\S+>)");
-    static const std::regex function_call_regex(R"(std::(\w+))");
+    static const std::regex include_directive_regex(R"(^\s*#include\s*<\S+>)", std::regex::optimize);
+    static const std::regex function_call_regex(R"(std::(\w+))", std::regex::optimize);
 
     // Define containers for the different types of information
     std::vector<disk::IncludeWithFunctions> temp_includes_with_functions;
