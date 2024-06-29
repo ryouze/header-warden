@@ -4,6 +4,7 @@
 
 #include <algorithm>      // for std::transform
 #include <cctype>         // for std::tolower
+#include <cstddef>        // for std::size_t
 #include <sstream>        // for std::ostringstream
 #include <string>         // for std::string
 #include <unordered_map>  // for std::unordered_map
@@ -16,7 +17,7 @@ std::string utils::strings::trim_whitespace(const std::string &str)
     LOG_DEBUG("Trimming whitespace from string '" + str + '\'');
 
     // Find the first non-whitespace character in the string
-    const auto start_pos = str.find_first_not_of(" \t\n\r\f\v");
+    const std::size_t start_pos = str.find_first_not_of(" \t\n\r\f\v");
 
     // If the string is all whitespace, return an empty string
     if (start_pos == std::string::npos) {
@@ -25,7 +26,7 @@ std::string utils::strings::trim_whitespace(const std::string &str)
     }
 
     // Find the last non-whitespace character in the string
-    const auto end_pos = str.find_last_not_of(" \t\n\r\f\v");
+    const std::size_t end_pos = str.find_last_not_of(" \t\n\r\f\v");
 
     // Remove leading and trailing whitespace
     const std::string trimmed_str = str.substr(start_pos, end_pos - start_pos + 1);
