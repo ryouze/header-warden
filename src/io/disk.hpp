@@ -133,8 +133,10 @@ struct Functions {
  * @brief Class that extracts information from a file.
  *
  * On construction, the class extracts information from a file, such as include directives and functions.
+ *
+ * @note This class is marked as `final` to prevent inheritance.
  */
-class File {
+class File final {
   public:
     /**
      * @brief Construct a new File object.

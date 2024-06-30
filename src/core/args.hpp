@@ -17,9 +17,11 @@ namespace args {
  *
  * On construction, the arguments are stored as a vector of strings. The class provides methods to check for the existence of arguments and retrieve their values.
  *
- * @note The program's name (`argv[0]`) is not included in the list of arguments. It is stored separately as `program_name_`. Use `get_help()` to get a formatted help message with the program's name included.
+ * @note This class is marked as `final` to prevent inheritance.
+ *
+ * @details The program's name (`argv[0]`) is excluded from the arguments vector and is instead stored as private `program_name_`. The `get_help()` method can be used to generate a help message that includes the program's name.
  */
-class ArgParser {
+class ArgParser final {
   public:
     /**
      * @brief Construct a new ArgParser object.
