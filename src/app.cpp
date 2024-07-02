@@ -3,7 +3,7 @@
  */
 
 #include <exception>  // for std::exception
-#include <sstream>    // for std::stringstream
+#include <sstream>    // for std::ostringstream
 #include <string>     // for std::string
 #include <vector>     // for std::vector
 
@@ -28,7 +28,7 @@ namespace {
 
     static const std::string line_separator(80, '-');
     bool has_issues = false;
-    std::stringstream report_message;
+    std::ostringstream report_message;
 
     // Load the file from disk and process it on construction
     const io::disk::File processed_file(file_path);
