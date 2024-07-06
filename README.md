@@ -109,11 +109,13 @@ To build and run this project, you'll need:
 Follow these steps to build the project:
 
 1. **Clone the repository**:
+
     ```bash
     git clone https://github.com/ryouze/header-warden.git
     ```
 
 2. **Generate the build system**:
+
     ```bash
     cd header-warden
     mkdir build && cd build
@@ -121,8 +123,23 @@ Follow these steps to build the project:
     ```
 
 3. **Compile the project**:
+
+    To compile the project, use the following command:
+
     ```bash
-    make -j
+    make
+    ```
+
+    To use all available cores with `make`, pass the `-j` flag with the number of cores available on your system:
+
+    ```bash
+    # MacOS
+    make -j$(sysctl -n hw.ncpu)
+    ```
+
+    ```bash
+    # GNU/Linux
+    make -j$(nproc)
     ```
 
 After successful compilation, you can run the program using `./header-warden`.
