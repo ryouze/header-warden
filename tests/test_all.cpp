@@ -123,7 +123,7 @@ int test_args::none()
         fmt::print(stderr, "core::args::Args() failed: no arguments weren't caught.\n");
         return EXIT_FAILURE;
     }
-    catch (const core::args::ArgsError &e) {
+    catch (const core::args::ArgsError &) {
         fmt::print("core::args::Args() passed: no arguments.\n");
         return EXIT_SUCCESS;
     }
@@ -192,7 +192,7 @@ int test_args::paths()
         }
 
         // Check if they are correctly detected (Args' search is recursive)
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_dir.get_directory().c_str()};
+        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_dir.get_directory().string().c_str()};
         const core::args::Args args(2, const_cast<char **>(fake_argv));
 
         // Compare the filepaths found by Args
@@ -547,7 +547,7 @@ int test_app::paths()
             f << examples::unlisted;
         }
 
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_file.c_str()};
+        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_file.string().c_str()};
         // Run the app
         app::run(2, const_cast<char **>(fake_argv));
 
