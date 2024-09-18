@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      # If true, cancel the workflow run if any matrix job fails.
+      # If false, continue to run the workflow and complete all matrix jobs, even if one or more jobs fail.
+      fail-fast: true
+
+      matrix:
+        include:
+          - os: macos-latest
+            # c_compiler: clang
+            cpp_compiler: clang++
+            input_name: header-warden
+            output_name: header-warden-macos-arm64
+          - os: ubuntu-latest
+            # c_compiler: gcc
+            cpp_compiler: g++
+            input_name: header-warden
+            output_name: header-warden-linux-x86_64
+          - os: windows-latest
+            # c_compiler: cl
+            cpp_compiler: cl
+            input_name: Release/header-warden.exe  # Stored in a subdirectory on Windows
+            output_name: header-warden-windows-x86_64.exe
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set reusable strings
+        # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        # Set the project version to the tag name instead of git commit.
+        # Set "-DCMAKE_C_COMPILER=${{ matrix.c_compiler }}" for C/C++ projects, otherwise use CXX for C++ only projects.
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+          -DCMAKE_BUILD_TYPE=Release
+          -DPROJECT_VERSION=${{ github.ref_name }}
+          -S ${{ github.workspace }}
+
+      - name: Build
+        # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+
+      - name: Rename binary
+        # Rename the binary to match the platform, otherwise the binaries will overwrite each other.
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        shell: bash
+        run: |
+          echo "Renaming '${{ matrix.input_name }}' to '${{ matrix.output_name }}'"
+          mv "${{ matrix.input_name }}" "${{ matrix.output_name }}"
+
+      - name: Release
+        # Upload the binary to the release page.
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.output_name }}
