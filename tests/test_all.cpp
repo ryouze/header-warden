@@ -191,8 +191,9 @@ int test_args::paths()
             ofs2 << examples::badly_formatted;
         }
 
-        // Check if they are correctly detected (Args' search is recursive)
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_dir.get_directory().string().c_str()};
+        // Store the string representation of the directory path
+        const std::string dir_path_str = temp_dir.get_directory().string();
+        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, dir_path_str.c_str()};
         const core::args::Args args(2, const_cast<char **>(fake_argv));
 
         // Compare the filepaths found by Args
@@ -547,7 +548,9 @@ int test_app::paths()
             f << examples::unlisted;
         }
 
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_file.string().c_str()};
+        // Store the string representation of the file path
+        const std::string temp_file_str = temp_file.string();
+        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_file_str.c_str()};
         // Run the app
         app::run(2, const_cast<char **>(fake_argv));
 
