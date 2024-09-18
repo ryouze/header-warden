@@ -16,7 +16,10 @@
 
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+
+#if defined(_WIN32)
 #include <pathmaster/pathmaster.hpp>
+#endif
 
 #include "app.hpp"
 #include "core/args.hpp"
