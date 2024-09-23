@@ -23,8 +23,10 @@
 
 #include "app.hpp"
 #include "core/args.hpp"
-#include "examples.hpp"
 #include "modules/analyze.hpp"
+
+#include "examples.hpp"
+#include "helpers.hpp"
 
 #define TEST_EXECUTABLE_NAME "tests"
 
@@ -147,43 +149,15 @@ int test_args::invalid()
     }
 }
 
-namespace {
-
-// RAII class to create a temporary directory
-class TempDir {
-  public:
-    explicit TempDir(const std::filesystem::path &directory)
-        : directory_(directory)
-    {
-        std::filesystem::remove_all(this->directory_);
-        std::filesystem::create_directories(this->directory_);
-    }
-
-    ~TempDir()
-    {
-        std::filesystem::remove_all(this->directory_);
-    }
-
-    const std::filesystem::path &get_directory() const
-    {
-        return this->directory_;
-    }
-
-  private:
-    const std::filesystem::path directory_;
-};
-
-}  // namespace
-
 int test_args::paths()
 {
     try {
         // Create a temporary directory using RAII
-        const TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
+        const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
         // Two dummy CPP files
-        const auto temp_file1 = temp_dir.get_directory() / "example1.cpp";
-        const auto temp_file2 = temp_dir.get_directory() / "example2.cpp";
+        const auto temp_file1 = temp_dir.get() / "example1.cpp";
+        const auto temp_file2 = temp_dir.get() / "example2.cpp";
 
         // Write to the files
         {
@@ -195,7 +169,7 @@ int test_args::paths()
         }
 
         // Store the string representation of the directory path
-        const std::string dir_path_str = temp_dir.get_directory().string();
+        const std::string dir_path_str = temp_dir.get().string();
         const char *fake_argv[] = {TEST_EXECUTABLE_NAME, dir_path_str.c_str()};
         const core::args::Args args(2, const_cast<char **>(fake_argv));
 
@@ -221,85 +195,14 @@ int test_args::paths()
     }
 }
 
-namespace {
-
-// Compare and print functions
-[[nodiscard]] bool compare_and_print_bare_includes(const std::vector<modules::analyze::BareInclude> &program,
-                                                   const std::vector<modules::analyze::BareInclude> &expected)
-{
-    if (program != expected) {
-        fmt::print(stderr, "Bare include test failed.\nExpected:\n");
-        for (const auto &entry : expected) {
-            fmt::print(stderr, "  Line '{}': '{}', Include: '{}'\n", entry.number, entry.text, entry.header);
-        }
-        fmt::print(stderr, "Actual:\n");
-        for (const auto &entry : program) {
-            fmt::print(stderr, "  Line '{}': '{}', Include: '{}'\n", entry.number, entry.text, entry.header);
-        }
-        return false;
-    }
-
-    fmt::print(stderr, "Bare include test succeeded.\n");
-    for (const auto &entry : program) {
-        fmt::print(stderr, "  Line '{}': '{}', Include: '{}'\n", entry.number, entry.text, entry.header);
-    }
-    return true;
-}
-
-[[nodiscard]] bool compare_and_print_unused_functions(const std::vector<modules::analyze::IncludeWithUnusedFunctions> &program,
-                                                      const std::vector<modules::analyze::IncludeWithUnusedFunctions> &expected)
-{
-    if (program != expected) {
-        fmt::print(stderr, "Unused functions test failed.\nExpected:\n");
-        for (const auto &entry : expected) {
-            fmt::print(stderr, "  Line '{}': '{}', Unused Functions: '{}'\n", entry.number, entry.text, fmt::join(entry.unused_functions, ", "));
-        }
-        fmt::print(stderr, "Actual:\n");
-        for (const auto &entry : program) {
-            fmt::print(stderr, "  Line '{}': '{}', Unused Functions: '{}'\n", entry.number, entry.text, fmt::join(entry.unused_functions, ", "));
-        }
-        return false;
-    }
-
-    fmt::print(stderr, "Unused functions test succeeded.\n");
-    for (const auto &entry : program) {
-        fmt::print(stderr, "  Line '{}': '{}', Unused Functions: '{}'\n", entry.number, entry.text, fmt::join(entry.unused_functions, ", "));
-    }
-    return true;
-}
-
-[[nodiscard]] bool compare_and_print_unlisted_functions(const std::vector<modules::analyze::UnlistedFunction> &program,
-                                                        const std::vector<modules::analyze::UnlistedFunction> &expected)
-{
-    if (program != expected) {
-        fmt::print(stderr, "Unlisted functions test failed.\nExpected:\n");
-        for (const auto &entry : expected) {
-            fmt::print(stderr, "  Line '{}': '{}', Function: '{}', Link: '{}'\n", entry.number, entry.text, entry.function, entry.link);
-        }
-        fmt::print(stderr, "Actual:\n");
-        for (const auto &entry : program) {
-            fmt::print(stderr, "  Line '{}': '{}', Function: '{}', Link: '{}'\n", entry.number, entry.text, entry.function, entry.link);
-        }
-        return false;
-    }
-
-    fmt::print(stderr, "Unlisted functions test succeeded.\n");
-    for (const auto &entry : program) {
-        fmt::print(stderr, "  Line '{}': '{}', Function: '{}', Link: '{}'\n", entry.number, entry.text, entry.function, entry.link);
-    }
-    return true;
-}
-
-}  // namespace
-
 int test_analyze::analyze_badly_formatted()
 {
     try {
         // Create a temporary directory using RAII
-        const TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
+        const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
         // Create a temporary file with badly formatted code
-        const auto temp_file = temp_dir.get_directory() / "badly_formatted.cpp";
+        const auto temp_file = temp_dir.get() / "badly_formatted.cpp";
         {
             std::ofstream f(temp_file);
             f << examples::badly_formatted;
@@ -322,17 +225,17 @@ int test_analyze::analyze_badly_formatted()
         modules::analyze::CodeParser parser(temp_file.string());
 
         // Compare bare includes
-        if (!compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
+        if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
             throw std::runtime_error("Bare include test failed.");
         }
 
         // Compare unused functions
-        if (!compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
+        if (!helpers::compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
             throw std::runtime_error("Unused functions test failed.");
         }
 
         // Compare unlisted functions
-        if (!compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
+        if (!helpers::compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
             throw std::runtime_error("Unlisted functions test failed.");
         }
 
@@ -349,10 +252,10 @@ int test_analyze::analyze_no_issues()
 {
     try {
         // Create a temporary directory using RAII
-        const TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
+        const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
         // Create a temporary file with analyze_no_issues code
-        const auto temp_file = temp_dir.get_directory() / "no_issues.cpp";
+        const auto temp_file = temp_dir.get() / "no_issues.cpp";
         {
             std::ofstream f(temp_file);
             f << examples::no_issues;
@@ -367,17 +270,17 @@ int test_analyze::analyze_no_issues()
         modules::analyze::CodeParser parser(temp_file.string());
 
         // Compare bare includes
-        if (!compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
+        if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
             throw std::runtime_error("Bare include test failed.");
         }
 
         // Compare unused functions
-        if (!compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
+        if (!helpers::compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
             throw std::runtime_error("Unused functions test failed.");
         }
 
         // Compare unlisted functions
-        if (!compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
+        if (!helpers::compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
             throw std::runtime_error("Unlisted functions test failed.");
         }
 
@@ -394,10 +297,10 @@ int test_analyze::analyze_bare()
 {
     try {
         // Create a temporary directory using RAII
-        const TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
+        const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
         // Create a temporary file with analyze_no_issues code
-        const auto temp_file = temp_dir.get_directory() / "bare.cpp";
+        const auto temp_file = temp_dir.get() / "bare.cpp";
         {
             std::ofstream f(temp_file);
             f << examples::bare;
@@ -415,17 +318,17 @@ int test_analyze::analyze_bare()
         modules::analyze::CodeParser parser(temp_file.string());
 
         // Compare bare includes
-        if (!compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
+        if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
             throw std::runtime_error("Bare include test failed.");
         }
 
         // Compare unused functions
-        if (!compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
+        if (!helpers::compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
             throw std::runtime_error("Unused functions test failed.");
         }
 
         // Compare unlisted functions
-        if (!compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
+        if (!helpers::compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
             throw std::runtime_error("Unlisted functions test failed.");
         }
 
@@ -442,10 +345,10 @@ int test_analyze::analyze_unused()
 {
     try {
         // Create a temporary directory using RAII
-        const TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
+        const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
         // Create a temporary file with analyze_no_issues code
-        const auto temp_file = temp_dir.get_directory() / "unused.cpp";
+        const auto temp_file = temp_dir.get() / "unused.cpp";
         {
             std::ofstream f(temp_file);
             f << examples::unused;
@@ -465,17 +368,17 @@ int test_analyze::analyze_unused()
         modules::analyze::CodeParser parser(temp_file.string());
 
         // Compare bare includes
-        if (!compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
+        if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
             throw std::runtime_error("Bare include test failed.");
         }
 
         // Compare unused functions
-        if (!compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
+        if (!helpers::compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
             throw std::runtime_error("Unused functions test failed.");
         }
 
         // Compare unlisted functions
-        if (!compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
+        if (!helpers::compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
             throw std::runtime_error("Unlisted functions test failed.");
         }
 
@@ -492,10 +395,10 @@ int test_analyze::analyze_unlisted()
 {
     try {
         // Create a temporary directory using RAII
-        const TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
+        const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
         // Create a temporary file with analyze_unlisted code
-        const auto temp_file = temp_dir.get_directory() / "unlisted.cpp";
+        const auto temp_file = temp_dir.get() / "unlisted.cpp";
         {
             std::ofstream f(temp_file);
             f << examples::unlisted;
@@ -513,17 +416,17 @@ int test_analyze::analyze_unlisted()
         modules::analyze::CodeParser parser(temp_file.string());
 
         // Compare bare includes
-        if (!compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
+        if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
             throw std::runtime_error("Bare include test failed.");
         }
 
         // Compare unused functions
-        if (!compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
+        if (!helpers::compare_and_print_unused_functions(parser.get_unused_functions(), expected_unused_functions)) {
             throw std::runtime_error("Unused functions test failed.");
         }
 
         // Compare unlisted functions
-        if (!compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
+        if (!helpers::compare_and_print_unlisted_functions(parser.get_unlisted_functions(), expected_unlisted_functions)) {
             throw std::runtime_error("Unlisted functions test failed.");
         }
 
@@ -542,10 +445,10 @@ int test_app::paths()
         // Create fake files and run the app
 
         // Create a temporary directory using RAII
-        const TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
+        const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
         // Create a temporary file with analyze_unlisted code
-        const auto temp_file = temp_dir.get_directory() / "paths.cpp";
+        const auto temp_file = temp_dir.get() / "paths.cpp";
         {
             std::ofstream f(temp_file);
             f << examples::unlisted;
