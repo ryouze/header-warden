@@ -51,8 +51,8 @@ After running header-warden, you will receive a report that lists all standard l
 
 -- 2) UNUSED FUNCTIONS --
 
--> Unused functions listed as comments.
 11| #include <algorithm>  // for std::find
+-> Unused functions listed as comments.
 -> Remove 'std::find' comments from '#include <algorithm>  // for std::find'.
 
 -- 3) UNLISTED FUNCTIONS --

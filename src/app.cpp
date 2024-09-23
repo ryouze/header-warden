@@ -50,8 +50,8 @@ void app::run(const int argc,
             fmt::print("-- 2) UNUSED FUNCTIONS --\n\n");
             if (args.enable.unused) {
                 for (const auto &entry : parser.get_unused_functions()) {
-                    fmt::print("-> Unused functions listed as comments.\n");
                     fmt::print("{}| {}\n", entry.number, entry.text);
+                    fmt::print("-> Unused functions listed as comments.\n");
                     fmt::print("-> Remove '{}' comments from '{}'.\n\n", fmt::join(entry.unused_functions, "', '"), entry.text);
                 }
             }
