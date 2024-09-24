@@ -167,7 +167,8 @@ int test_args::paths()
         }
 
         // Store the string representation of the directory path
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_dir.get().c_str()};
+        const std::string temp_dir_str = temp_dir.get().string();
+        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_dir_str.c_str()};
         const core::args::Args args(2, const_cast<char **>(fake_argv));
 
         // Compare the filepaths found by Args

@@ -8,7 +8,6 @@
 
 #include <cstddef>     // for std::size_t
 #include <filesystem>  // for std::filesystem
-#include <stdexcept>   // for std::runtime_error
 #include <string>      // for std::string
 #include <vector>      // for std::vector
 
