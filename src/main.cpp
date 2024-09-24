@@ -8,7 +8,9 @@
 #include <fmt/core.h>
 
 #if defined(_WIN32)
-#include <pathmaster/pathmaster.hpp>
+#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
+#include <locale>            // for setlocale, LC_ALL
+#include <windows.h>         // for WideCharToMultiByte, GetLastError, CP_UTF8, SetConsoleCP, SetConsoleOutputCP
 #endif
 
 #include "app.hpp"
@@ -28,8 +30,17 @@ int main(int argc,
     try {
 
 #if defined(_WIN32)
-        // Enable UTF-8 output on Windows
-        pathmaster::setup_utf8_console_output();
+        if (!SetConsoleCP(CP_UTF8) || !SetConsoleOutputCP(CP_UTF8)) {
+            if (throw_on_error) {
+                throw PathmasterError("Failed to set UTF-8 code page on Windows: " + std::to_string(GetLastError()));
+            }
+        }
+
+        if (!setlocale(LC_ALL, ".UTF8")) {
+            if (throw_on_error) {
+                throw PathmasterError("Failed to set UTF-8 locale on Windows");
+            }
+        }
 #endif
 
         // Run the application

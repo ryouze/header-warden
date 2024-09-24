@@ -30,20 +30,10 @@ function(fetch_and_link_external_dependencies target)
     SYSTEM
   )
 
-  FetchContent_Declare(
-    pathmaster
-    GIT_REPOSITORY https://github.com/ryouze/pathmaster.git
-    GIT_TAG        v1.0.0
-    GIT_PROGRESS   TRUE
-    GIT_SHALLOW    TRUE
-    EXCLUDE_FROM_ALL
-    SYSTEM
-  )
-
   # Make dependencies available
-  FetchContent_MakeAvailable(argparse fmt pathmaster)
+  FetchContent_MakeAvailable(argparse fmt)
 
   # Link dependencies to the target
-  target_link_libraries(${target} PUBLIC argparse fmt::fmt pathmaster)
-  message(STATUS "[INFO] Linked dependencies 'argparse', 'fmt', and 'pathmaster' to target '${target}'.")
+  target_link_libraries(${target} PUBLIC argparse fmt::fmt)
+  message(STATUS "[INFO] Linked dependencies 'argparse' and 'fmt' to target '${target}'.")
 endfunction()
