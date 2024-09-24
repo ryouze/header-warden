@@ -6,9 +6,19 @@
 
 #pragma once
 
-#include <string>  // for std::string
+#include <filesystem>  // for std::filesystem
+#include <string>      // for std::string
+#include <vector>      // for std::vector
 
 namespace core::string {
+
+/**
+ * @brief Convert a vector of filesystem paths to a vector of strings.
+ *
+ * @param paths Vector of filesystem paths (e.g., {"/path/to/file1", "/path/to/file2"}).
+ * @return Vector of strings (e.g., {"/path/to/file1", "/path/to/file2"}).
+ */
+[[nodiscard]] std::vector<std::string> paths_to_strings(const std::vector<std::filesystem::path> &v);
 
 /**
  * @brief Convert a string to lowercase.

@@ -80,7 +80,7 @@ core::args::Args::Args(const int argc,
                 }
                 // Append only if the file extension matches any of the C++ file types
                 if (file_extensions.find(entry.path().extension().string()) != file_extensions.cend()) {
-                    this->filepaths.emplace_back(entry.path().string());
+                    this->filepaths.emplace_back(entry.path());
                 }
             }
         }
@@ -88,7 +88,7 @@ core::args::Args::Args(const int argc,
         else {
             // Append only if the file extension matches any of the C++ file types
             if (file_extensions.find(resolved_filepath.extension().string()) != file_extensions.cend()) {
-                this->filepaths.emplace_back(resolved_filepath.string());
+                this->filepaths.emplace_back(resolved_filepath);
             }
         }
     }

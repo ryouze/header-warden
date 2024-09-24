@@ -1,26 +1,25 @@
 /**
  * @file io.hpp
  *
- * @brief Load lines of text from disk.
+ * @brief Input/output functions.
  */
 
 #pragma once
 
-#include <cstddef>    // for std::size_t
-#include <stdexcept>  // for std::runtime_error
-#include <string>     // for std::string
-#include <vector>     // for std::vector
+#include <cstddef>     // for std::size_t
+#include <filesystem>  // for std::filesystem
+#include <stdexcept>   // for std::runtime_error
+#include <string>      // for std::string
+#include <vector>      // for std::vector
 
 namespace core::io {
 
 /**
- * @brief Base class for exceptions raised during I/O operations.
+ * @brief Setup UTF-8 input/output on Windows. Do nothing on other platforms.
+ *
+ * @throws std::runtime_error If failed to enable UTF-8 encoding on Windows.
  */
-class IOError : public std::runtime_error {
-  public:
-    explicit IOError(const std::string &message)
-        : std::runtime_error(message) {}
-};
+void setup_utf8_console();
 
 /**
  * @brief Struct that represents a single line of text.
@@ -58,9 +57,9 @@ struct Line {
  *
  * @return Vector of Line structs (e.g., {Line(1, "Hello world!"), Line(2, "How are you?")}).
  *
- * @throws core::io::IOError If the file cannot be opened for reading or if any other I/O error occurs.
+ * @throws std::runtime_error If the file cannot be opened for reading or if any other I/O error occurs.
  */
-[[nodiscard]] std::vector<Line> read_lines(const std::string &input_path,
+[[nodiscard]] std::vector<Line> read_lines(const std::filesystem::path &input_path,
                                            const std::size_t initial_capacity = 100);
 
 }  // namespace core::io

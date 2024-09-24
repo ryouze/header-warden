@@ -7,6 +7,7 @@
 
 #include "app.hpp"
 #include "core/args.hpp"
+#include "core/string.hpp"
 #include "modules/analyze.hpp"
 
 void app::run(const int argc,
@@ -15,14 +16,16 @@ void app::run(const int argc,
     // Process command-line arguments (this might throw an ArgParseError)
     const core::args::Args args(argc, argv);
 
-    fmt::print("Analyzing {} files: [{}]\n\n", args.filepaths.size(), fmt::join(args.filepaths, ", "));
+    fmt::print("Analyzing {} files: [{}]\n\n",
+               args.filepaths.size(),
+               fmt::join(core::string::paths_to_strings(args.filepaths), ", "));
     // fmt::print("Enabled: bare={}, unused={}, unlisted={}\n\n", args.enable.bare, args.enable.unused, args.enable.unlisted);
 
     fmt::print("--------------------------------------------------------------------------------\n\n");
 
     // Process each filepath
     for (const auto &path : args.filepaths) {
-        fmt::print("##- {} -##\n\n", path);
+        fmt::print("##- {} -##\n\n", path.string());
         const modules::analyze::CodeParser parser(path);
 
         // Get references to the parser's extracted data / results

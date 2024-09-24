@@ -6,17 +6,25 @@
 
 #pragma once
 
-#include <stdexcept>  // for std::runtime_error
-#include <string>     // for std::string
-#include <vector>     // for std::vector
+#include <filesystem>  // for std::filesystem
+#include <stdexcept>   // for std::runtime_error
+#include <string>      // for std::string
+#include <vector>      // for std::vector
 
 namespace core::args {
 
 /**
  * @brief Exceptions raised by command-line argument parser when help or version is requested. The requested message is returned.
+ *
+ * This class extends "std::runtime_error".
  */
 class ArgsError : public std::runtime_error {
   public:
+    /**
+     * @brief Construct a new ArgsError object.
+     *
+     * @param message Error message that describes the cause of the exception (e.g., "Failed to load data").
+     */
     explicit ArgsError(const std::string &message)
         : std::runtime_error(message) {}
 };
@@ -68,7 +76,7 @@ class Args final {
     /**
      * @brief Vector of file paths.
      */
-    std::vector<std::string> filepaths;
+    std::vector<std::filesystem::path> filepaths;
 
     /**
      * @brief Struct of enabled features (e.g., "Enable(false, true, true)").

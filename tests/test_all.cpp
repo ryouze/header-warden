@@ -17,12 +17,10 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
-#if defined(_WIN32)
-#include <pathmaster/pathmaster.hpp>
-#endif
-
 #include "app.hpp"
 #include "core/args.hpp"
+#include "core/io.hpp"
+#include "core/string.hpp"
 #include "modules/analyze.hpp"
 
 #include "examples.hpp"
@@ -56,12 +54,11 @@ namespace test_app {
  *
  * @return EXIT_SUCCESS if the application ran successfully, EXIT_FAILURE otherwise.
  */
-int main(int argc, char **argv)
+int main(int argc,
+         char **argv)
 {
-#if defined(_WIN32)
-    // Enable UTF-8 output on Windows
-    pathmaster::setup_utf8_console_output();
-#endif
+    // Setup UTF-8 input/output on Windows
+    core::io::setup_utf8_console();
 
     // Define the formatted help message
     const std::string help_message = fmt::format(
@@ -78,7 +75,7 @@ int main(int argc, char **argv)
         fmt::print("{}\n", help_message);
         return EXIT_FAILURE;
     }
-    
+
     // Otherwise, define argument to function mapping
     const std::unordered_map<std::string, std::function<int()>> tests = {
         {"test_args::none", test_args::none},
@@ -170,19 +167,18 @@ int test_args::paths()
         }
 
         // Store the string representation of the directory path
-        const std::string dir_path_str = temp_dir.get().string();
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, dir_path_str.c_str()};
+        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_dir.get().c_str()};
         const core::args::Args args(2, const_cast<char **>(fake_argv));
 
         // Compare the filepaths found by Args
         if (args.filepaths.size() != 2) {
-            fmt::print(stderr, "Filepaths test failed: expected 2, got {}: {}\n", args.filepaths.size(), fmt::join(args.filepaths, ", "));
+            fmt::print(stderr, "Filepaths test failed: expected 2, got {}: {}\n", args.filepaths.size(), fmt::join(core::string::paths_to_strings(args.filepaths), ", "));
             return EXIT_FAILURE;
         }
         // Iterate, because the order is not guaranteed
         for (const auto &path : args.filepaths) {
             if (path != temp_file1.string() && path != temp_file2.string()) {
-                fmt::print(stderr, "Filepaths test failed: expected {}, got {}\n", temp_file1.string(), path);
+                fmt::print(stderr, "Filepaths test failed: expected {}, got {}\n", temp_file1.string(), path.string());
                 return EXIT_FAILURE;
             }
         }
@@ -223,7 +219,7 @@ int test_analyze::analyze_badly_formatted()
         };
 
         // Analyze the temporary file
-        modules::analyze::CodeParser parser(temp_file.string());
+        modules::analyze::CodeParser parser(temp_file);
 
         // Compare bare includes
         if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
@@ -268,7 +264,7 @@ int test_analyze::analyze_no_issues()
         const std::vector<modules::analyze::UnlistedFunction> expected_unlisted_functions = {};
 
         // Analyze the temporary file
-        modules::analyze::CodeParser parser(temp_file.string());
+        modules::analyze::CodeParser parser(temp_file);
 
         // Compare bare includes
         if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
@@ -316,7 +312,7 @@ int test_analyze::analyze_bare()
         const std::vector<modules::analyze::UnlistedFunction> expected_unlisted_functions = {};
 
         // Analyze the temporary file
-        modules::analyze::CodeParser parser(temp_file.string());
+        modules::analyze::CodeParser parser(temp_file);
 
         // Compare bare includes
         if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
@@ -366,7 +362,7 @@ int test_analyze::analyze_unused()
         const std::vector<modules::analyze::UnlistedFunction> expected_unlisted_functions = {};
 
         // Analyze the temporary file
-        modules::analyze::CodeParser parser(temp_file.string());
+        modules::analyze::CodeParser parser(temp_file);
 
         // Compare bare includes
         if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {
@@ -414,7 +410,7 @@ int test_analyze::analyze_unlisted()
         };
 
         // Analyze the temporary file
-        modules::analyze::CodeParser parser(temp_file.string());
+        modules::analyze::CodeParser parser(temp_file);
 
         // Compare bare includes
         if (!helpers::compare_and_print_bare_includes(parser.get_bare_includes(), expected_bare_includes)) {

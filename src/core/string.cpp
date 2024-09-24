@@ -5,11 +5,30 @@
 #include <algorithm>      // for std::transform, std::find_if_not
 #include <cctype>         // for std::tolower, std::isspace
 #include <cstddef>        // for std::size_t
+#include <filesystem>     // for std::filesystem
 #include <sstream>        // for std::ostringstream
 #include <string>         // for std::string
 #include <unordered_map>  // for std::unordered_map
+#include <vector>         // for std::vector
 
 #include "string.hpp"
+
+std::vector<std::string> core::string::paths_to_strings(const std::vector<std::filesystem::path> &paths)
+{
+    // Get the length of the original vector
+    const std::size_t paths_len = paths.size();
+
+    // Convert vector to vector of strings
+    std::vector<std::string> strings;
+    strings.reserve(paths_len);
+    for (const auto &path : paths) {
+        strings.emplace_back(path.string());
+    }
+
+    // Return shrunk vector (RVO)
+    strings.shrink_to_fit();
+    return strings;
+}
 
 std::string core::string::to_lower(std::string str)
 {

@@ -3,6 +3,7 @@
  */
 
 #include <algorithm>      // for std::transform, std::find
+#include <filesystem>     // for std::filesystem
 #include <iterator>       // for std::back_inserter
 #include <regex>          // for std::regex, std::smatch, std::sregex_iterator, std::regex_search
 #include <string>         // for std::string
@@ -39,7 +40,7 @@ namespace {
 
 }  // namespace
 
-modules::analyze::CodeParser::CodeParser(const std::string &input_path)
+modules::analyze::CodeParser::CodeParser(const std::filesystem::path &input_path)
 {
     // Define the regex for an include directive (e.g., "#include <iostream>") and a function call (e.g., "std::cout")
     static const std::regex include_directive_regex(R"(^\s*#include\s*<\S+>)", std::regex::optimize);
@@ -50,15 +51,15 @@ modules::analyze::CodeParser::CodeParser(const std::string &input_path)
     std::vector<modules::analyze::UnlistedFunction> temp_functions;
 
     // Load the file from disk and iterate over each line
-    for (const core::io::Line &current_line : core::io::read_lines(input_path)) {
+    for (const auto &[line_number, line_text] : core::io::read_lines(input_path)) {
 
         // Skip if the raw line is empty (avoid stripping and lowercasing the line)
-        if (current_line.text.empty()) {
+        if (line_text.empty()) {
             continue;
         }
 
         // Strip leading and trailing whitespace from line, turn line lowercase
-        std::string processed_line = core::string::to_lower(core::string::strip_whitespace(current_line.text));
+        std::string processed_line = core::string::to_lower(core::string::strip_whitespace(line_text));
 
         // Skip if the processed line is a comment
         if (begins_with_comment(processed_line)) {
@@ -88,17 +89,17 @@ modules::analyze::CodeParser::CodeParser(const std::string &input_path)
         // Categorize the result into containers
         if (line_contains_include && !function_calls.empty()) {
             // E.g., "#include <iostream> // for std::cout, std::cerr"
-            temp_includes_with_functions.emplace_back(current_line.number, current_line.text, function_calls);
+            temp_includes_with_functions.emplace_back(line_number, line_text, function_calls);
         }
         else if (line_contains_include) {
             // E.g., "#include <string>""
-            this->bare_includes_.emplace_back(current_line.number, current_line.text, include_directive);
+            this->bare_includes_.emplace_back(line_number, line_text, include_directive);
         }
         else if (!function_calls.empty()) {
             // E.g., "std::string"
             for (const auto &function_name : function_calls) {
                 // Do not create C++ reference links, we do this later
-                temp_functions.emplace_back(current_line.number, current_line.text, function_name, "");
+                temp_functions.emplace_back(line_number, line_text, function_name, "");
             }
         }
         // Otherwise, the line is ignored, e.g., '#include "my_header.hpp"'

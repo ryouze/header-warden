@@ -7,14 +7,9 @@
 
 #include <fmt/core.h>
 
-#if defined(_WIN32)
-#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
-#include <locale>            // for setlocale, LC_ALL
-#include <windows.h>         // for WideCharToMultiByte, GetLastError, CP_UTF8, SetConsoleCP, SetConsoleOutputCP
-#endif
-
 #include "app.hpp"
 #include "core/args.hpp"
+#include "core/io.hpp"
 
 /**
  * @brief Entry-point of the application.
@@ -28,20 +23,8 @@ int main(int argc,
          char **argv)
 {
     try {
-
-#if defined(_WIN32)
-        if (!SetConsoleCP(CP_UTF8) || !SetConsoleOutputCP(CP_UTF8)) {
-            if (throw_on_error) {
-                throw PathmasterError("Failed to set UTF-8 code page on Windows: " + std::to_string(GetLastError()));
-            }
-        }
-
-        if (!setlocale(LC_ALL, ".UTF8")) {
-            if (throw_on_error) {
-                throw PathmasterError("Failed to set UTF-8 locale on Windows");
-            }
-        }
-#endif
+        // Setup UTF-8 input/output on Windows
+        core::io::setup_utf8_console();
 
         // Run the application
         app::run(argc, argv);

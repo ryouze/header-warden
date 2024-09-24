@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include <cstddef>  // for std::size_t
-#include <string>   // for std::string
-#include <vector>   // for std::vector
+#include <cstddef>     // for std::size_t
+#include <filesystem>  // for std::filesystem
+#include <string>      // for std::string
+#include <vector>      // for std::vector
 
 #include "core/io.hpp"
 
@@ -132,7 +133,7 @@ class CodeParser final {
      *
      * @param input_path Path to the C++ file that shall be parsed (e.g., "~/main.cpp").
      */
-    explicit CodeParser(const std::string &input_path);
+    explicit CodeParser(const std::filesystem::path &input_path);
 
     /**
      * @brief Get a vector of bare include directives, i.e., without any standard functions listed after them as comments.
