@@ -17,8 +17,10 @@ namespace core::args {
  * @brief Exceptions raised by command-line argument parser when help or version is requested. The requested message is returned.
  *
  * This class extends "std::runtime_error".
+ *
+ * @note This class is marked as `final` to prevent inheritance.
  */
-class ArgsError : public std::runtime_error {
+class ArgsError final : public std::runtime_error {
   public:
     /**
      * @brief Construct a new ArgsError object.
