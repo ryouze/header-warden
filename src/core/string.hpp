@@ -18,7 +18,7 @@ namespace core::string {
  * @param paths Vector of filesystem paths (e.g., {"/path/to/file1", "/path/to/file2"}).
  * @return Vector of strings (e.g., {"/path/to/file1", "/path/to/file2"}).
  */
-[[nodiscard]] std::vector<std::string> paths_to_strings(const std::vector<std::filesystem::path> &v);
+[[nodiscard]] std::vector<std::string> paths_to_strings(const std::vector<std::filesystem::path> &paths);
 
 /**
  * @brief Convert a string to lowercase.
