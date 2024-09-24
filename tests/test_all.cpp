@@ -78,6 +78,7 @@ int main(int argc, char **argv)
         fmt::print("{}\n", help_message);
         return EXIT_FAILURE;
     }
+    
     // Otherwise, define argument to function mapping
     const std::unordered_map<std::string, std::function<int()>> tests = {
         {"test_args::none", test_args::none},

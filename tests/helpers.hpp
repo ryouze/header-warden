@@ -23,6 +23,8 @@ class TempDir final {
     /**
      * @brief Construct a new TempDir object.
      *
+     * On construction, the temporary directory is removed recursively from disk, then created again to ensure it is empty.
+     *
      * @param directory Path to the temporary directory (e.g., "~/data").
      */
     inline explicit TempDir(const std::filesystem::path &directory)
