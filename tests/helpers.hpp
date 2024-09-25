@@ -9,6 +9,9 @@
 #include <filesystem>  // for std::filesystem
 #include <vector>      // for std::vector
 
+#include <fmt/core.h>
+#include <fmt/ranges.h>
+
 namespace helpers {
 
 /**
