@@ -184,6 +184,8 @@ header-warden src/main.cpp
 header-warden src
 ```
 
+If a directory is passed, the program will search for files with the following extensions: `.cpp`, `.hpp`, `.h`, `.cxx`, `.cc`, `.hh`, `.hxx`, `.tpp`.
+
 You can also pass multiple files and directories as arguments.
 
 ```sh

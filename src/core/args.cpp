@@ -22,7 +22,7 @@ Args::Args(const int argc,
 {
     // Define a set of common C++ file extensions
     // TODO: Add a way to manually override this set using a command-line argument
-    const std::unordered_set<std::string> file_extensions = {".cpp", ".hpp", ".cxx", ".cc", ".hh", ".hxx", ".tpp"};
+    const std::unordered_set<std::string> file_extensions = {".cpp", ".hpp", ".h", ".cxx", ".cc", ".hh", ".hxx", ".tpp"};
 
     // Define paths to be extracted from command-line arguments
     std::vector<std::string> files_or_directories;
