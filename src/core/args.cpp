@@ -15,8 +15,10 @@
 #include "args.hpp"
 #include "version.hpp"
 
-core::args::Args::Args(const int argc,
-                       char **argv)
+namespace core::args {
+
+Args::Args(const int argc,
+           char **argv)
 {
     // Define a set of common C++ file extensions
     // TODO: Add a way to manually override this set using a command-line argument
@@ -99,3 +101,5 @@ core::args::Args::Args(const int argc,
         throw ArgsError(fmt::format("Error: No C++ files ({}) found in provided paths: {}\n\n{}", fmt::join(file_extensions, ", "), fmt::join(files_or_directories, ", "), program.help().str()));
     }
 }
+
+}  // namespace core::args

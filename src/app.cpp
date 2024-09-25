@@ -10,7 +10,9 @@
 #include "core/string.hpp"
 #include "modules/analyze.hpp"
 
-void app::run(const core::args::Args &args)
+namespace app {
+
+void run(const core::args::Args &args)
 {
     fmt::print("Analyzing {} files: [{}]\n\n",
                args.filepaths.size(),
@@ -84,3 +86,5 @@ void app::run(const core::args::Args &args)
         fmt::print("--------------------------------------------------------------------------------\n\n");
     }
 }
+
+}  // namespace app

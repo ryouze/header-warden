@@ -19,7 +19,9 @@
 
 #include "io.hpp"
 
-void core::io::setup_utf8_console()
+namespace core::io {
+
+void setup_utf8_console()
 {
 #if defined(_WIN32)
     if (!SetConsoleCP(CP_UTF8) || !SetConsoleOutputCP(CP_UTF8)) {
@@ -32,8 +34,8 @@ void core::io::setup_utf8_console()
 #endif
 }
 
-std::vector<core::io::Line> core::io::read_lines(const std::filesystem::path &input_path,
-                                                 const std::size_t initial_capacity)
+std::vector<Line> read_lines(const std::filesystem::path &input_path,
+                             const std::size_t initial_capacity)
 {
     try {
         // Open the file in read mode
@@ -45,7 +47,7 @@ std::vector<core::io::Line> core::io::read_lines(const std::filesystem::path &in
         }
 
         // Reserve space for lines based on initial capacity
-        std::vector<core::io::Line> lines;
+        std::vector<Line> lines;
         lines.reserve(initial_capacity);
 
         {  // Allocate buffer for reading lines
@@ -66,3 +68,5 @@ std::vector<core::io::Line> core::io::read_lines(const std::filesystem::path &in
         throw std::runtime_error(fmt::format("Error loading file '{}': {}", input_path.string(), e.what()));
     }
 }
+
+}  // namespace core::io

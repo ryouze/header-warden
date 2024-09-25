@@ -14,6 +14,8 @@
 #include "core/io.hpp"
 #include "core/string.hpp"
 
+namespace modules::analyze {
+
 namespace {
 
 /**
@@ -40,15 +42,15 @@ namespace {
 
 }  // namespace
 
-modules::analyze::CodeParser::CodeParser(const std::filesystem::path &input_path)
+CodeParser::CodeParser(const std::filesystem::path &input_path)
 {
     // Define the regex for an include directive (e.g., "#include <iostream>") and a function call (e.g., "std::cout")
     static const std::regex include_directive_regex(R"(^\s*#include\s*<\S+>)", std::regex::optimize);
     static const std::regex function_call_regex(R"(std::(\w+))", std::regex::optimize);
 
     // Define containers for the different types of information
-    std::vector<modules::analyze::IncludeWithUnusedFunctions> temp_includes_with_functions;
-    std::vector<modules::analyze::UnlistedFunction> temp_functions;
+    std::vector<IncludeWithUnusedFunctions> temp_includes_with_functions;
+    std::vector<UnlistedFunction> temp_functions;
 
     // Load the file from disk and iterate over each line
     for (const auto &[line_number, line_text] : core::io::read_lines(input_path)) {
@@ -145,17 +147,19 @@ modules::analyze::CodeParser::CodeParser(const std::filesystem::path &input_path
     }
 }
 
-const std::vector<modules::analyze::BareInclude> &modules::analyze::CodeParser::get_bare_includes() const
+const std::vector<BareInclude> &CodeParser::get_bare_includes() const
 {
     return this->bare_includes_;
 }
 
-const std::vector<modules::analyze::IncludeWithUnusedFunctions> &modules::analyze::CodeParser::get_unused_functions() const
+const std::vector<IncludeWithUnusedFunctions> &CodeParser::get_unused_functions() const
 {
     return this->unused_functions_;
 }
 
-const std::vector<modules::analyze::UnlistedFunction> &modules::analyze::CodeParser::get_unlisted_functions() const
+const std::vector<UnlistedFunction> &CodeParser::get_unlisted_functions() const
 {
     return this->unlisted_functions_;
 }
+
+}  // namespace modules::analyze

@@ -13,7 +13,9 @@
 
 #include "string.hpp"
 
-std::vector<std::string> core::string::paths_to_strings(const std::vector<std::filesystem::path> &paths)
+namespace core::string {
+
+std::vector<std::string> paths_to_strings(const std::vector<std::filesystem::path> &paths)
 {
     // Get the length of the original vector
     const std::size_t paths_len = paths.size();
@@ -30,7 +32,7 @@ std::vector<std::string> core::string::paths_to_strings(const std::vector<std::f
     return strings;
 }
 
-std::string core::string::to_lower(std::string str)
+std::string to_lower(std::string str)
 {
     std::transform(str.cbegin(), str.cend(), str.begin(),
                    // Since std::to_lower expects an "int", we cast "char" to "unsigned char"
@@ -38,7 +40,7 @@ std::string core::string::to_lower(std::string str)
     return str;
 }
 
-std::string core::string::strip_whitespace(const std::string &str)
+std::string strip_whitespace(const std::string &str)
 {
     // Find the first non-whitespace character from the start
     const auto start = std::find_if_not(str.cbegin(), str.cend(),
@@ -53,7 +55,7 @@ std::string core::string::strip_whitespace(const std::string &str)
     return (start < end) ? std::string(start, end) : "";
 }
 
-std::string core::string::remove_comment(std::string str)
+std::string remove_comment(std::string str)
 {
     // Find index of "//" in the string, then remove everything from the index to the end of the string
     if (const std::size_t index = str.find("//"); index != std::string::npos) {
@@ -62,7 +64,7 @@ std::string core::string::remove_comment(std::string str)
     return str;
 }
 
-std::string core::string::create_cpp_reference_link(const std::string &name)
+std::string create_cpp_reference_link(const std::string &name)
 {
     // URL encoding map
     // This list is not exhaustive and only includes characters most likely to appear in function names
@@ -113,3 +115,5 @@ std::string core::string::create_cpp_reference_link(const std::string &name)
     // Return the link as a string
     return link.str();
 }
+
+}  // namespace core::string
