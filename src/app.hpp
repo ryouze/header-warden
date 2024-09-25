@@ -6,15 +6,15 @@
 
 #pragma once
 
+#include "core/args.hpp"
+
 namespace app {
 
 /**
- * @brief Parse command-line arguments and run the application.
+ * @brief Run the application.
  *
- * @param argc Number of command-line arguments (e.g., "2").
- * @param argv Array of command-line arguments (e.g., {"./bin", "-h"}).
+ * @param args Parsed command-line arguments.
  */
-void run(const int argc,
-         char **argv);
+void run(const core::args::Args &args);
 
 }  // namespace app

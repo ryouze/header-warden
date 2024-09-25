@@ -452,11 +452,12 @@ int test_app::paths()
             f << examples::unlisted;
         }
 
-        // Store the string representation of the file path
+        // // Store the string representation of the file path
         const std::string temp_file_str = temp_file.string();
         const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_file_str.c_str()};
-        // Run the app
-        app::run(2, const_cast<char **>(fake_argv));
+
+        // Pass parsed command-line arguments to the application
+        app::run(core::args::Args(2, const_cast<char **>(fake_argv)));
 
         fmt::print("test_app::paths() passed.\n");
         return EXIT_SUCCESS;

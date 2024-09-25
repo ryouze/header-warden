@@ -9,7 +9,6 @@
 #include <stdexcept>   // for std::runtime_error
 #include <string>      // for std::string, std::getline
 #include <vector>      // for std::vector
-
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 #include <locale>            // for setlocale, LC_ALL

@@ -9,7 +9,9 @@
 
 #include "app.hpp"
 #include "core/args.hpp"
+#if defined(_WIN32)
 #include "core/io.hpp"
+#endif
 
 /**
  * @brief Entry-point of the application.
@@ -23,11 +25,13 @@ int main(int argc,
          char **argv)
 {
     try {
-        // Setup UTF-8 input/output on Windows
+#if defined(_WIN32)
+        // Setup UTF-8 input/output on Windows (does nothing on other platforms)
         core::io::setup_utf8_console();
+#endif
 
-        // Run the application
-        app::run(argc, argv);
+        // Pass parsed command-line arguments to the application
+        app::run(core::args::Args(argc, argv));
     }
     catch (const core::args::ArgsError &e) {
         // Failed to parse command-line arguments

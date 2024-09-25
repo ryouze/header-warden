@@ -10,12 +10,8 @@
 #include "core/string.hpp"
 #include "modules/analyze.hpp"
 
-void app::run(const int argc,
-              char **argv)
+void app::run(const core::args::Args &args)
 {
-    // Process command-line arguments (this might throw an ArgParseError)
-    const core::args::Args args(argc, argv);
-
     fmt::print("Analyzing {} files: [{}]\n\n",
                args.filepaths.size(),
                fmt::join(core::string::paths_to_strings(args.filepaths), ", "));
