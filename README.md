@@ -171,19 +171,23 @@ sudo cmake --install .
 To run the program, use the following command:
 
 ```sh
-header-warden <paths...>
+header-warden
+```
+
+The program expects at least one argument, which can be a file or directory.
+
+```sh
+header-warden src/main.cpp
 ```
 
 ```sh
 header-warden src
 ```
 
-```sh
-header-warden main.cpp
-```
+You can also pass multiple files and directories as arguments.
 
 ```sh
-header-warden ../src ../tests
+header-warden ../src ~/dev/app/tests
 ```
 
 **Note:** On Windows, a modern terminal emulator like [Windows Terminal](https://github.com/microsoft/terminal) is recommended, although the default Command Prompt will display UTF-8 characters correctly.
