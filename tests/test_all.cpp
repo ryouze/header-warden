@@ -94,30 +94,42 @@ int main(int argc,
     };
 
     // Get the test name from the command-line arguments
-    const std::string test_name = argv[1];
+    const std::string arg = argv[1];
 
     // If the test name is found, run the corresponding test
-    if (const auto it = tests.find(test_name); it != tests.cend()) {
-        return it->second();
+    if (const auto it = tests.find(arg); it != tests.cend()) {
+        try {
+            return it->second();
+        }
+        catch (const std::exception &e) {
+            fmt::print(stderr, "Test '{}' threw an exception: {}\n", arg, e.what());
+            return EXIT_FAILURE;
+        }
     }
-    else if (test_name == "all") {
+    else if (arg == "all") {
         // Run all tests sequentially and print the results
         bool all_passed = true;
         for (const auto &[name, test_func] : tests) {
             fmt::print("Running test: {}\n", name);
-            const int result = test_func();
-            if (result != EXIT_SUCCESS) {
-                all_passed = false;
-                fmt::print(stderr, "Test '{}' failed.\n", name);
+            try {
+                const int result = test_func();
+                if (result != EXIT_SUCCESS) {
+                    all_passed = false;
+                    fmt::print(stderr, "Test '{}' failed.\n", name);
+                }
+                else {
+                    fmt::print("Test '{}' passed.\n", name);
+                }
             }
-            else {
-                fmt::print("Test '{}' passed.\n", name);
+            catch (const std::exception &e) {
+                all_passed = false;
+                fmt::print(stderr, "Test '{}' threw an exception: {}\n", name, e.what());
             }
         }
         return all_passed ? EXIT_SUCCESS : EXIT_FAILURE;
     }
     else {
-        fmt::print(stderr, "Error: Invalid test name: '{}'\n\n{}\n", test_name, help_message);
+        fmt::print(stderr, "Error: Invalid test name: '{}'\n\n{}\n", arg, help_message);
         return EXIT_FAILURE;
     }
 }
