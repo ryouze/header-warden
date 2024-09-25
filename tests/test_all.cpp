@@ -19,9 +19,11 @@
 
 #include "app.hpp"
 #include "core/args.hpp"
-#include "core/io.hpp"
 #include "core/string.hpp"
 #include "modules/analyze.hpp"
+#if defined(_WIN32)
+#include "core/io.hpp"
+#endif
 
 #include "examples.hpp"
 #include "helpers.hpp"
@@ -52,13 +54,15 @@ namespace test_app {
  * @param argc Number of command-line arguments (e.g., "2").
  * @param argv Array of command-line arguments (e.g., {"./bin", "-h"}).
  *
- * @return EXIT_SUCCESS if the application ran successfully, EXIT_FAILURE otherwise.
+ * @return EXIT_SUCCESS if the test application ran successfully, EXIT_FAILURE otherwise.
  */
 int main(int argc,
          char **argv)
 {
-    // Setup UTF-8 input/output on Windows
+#if defined(_WIN32)
+    // Setup UTF-8 input/output on Windows (does nothing on other platforms)
     core::io::setup_utf8_console();
+#endif
 
     // Define the formatted help message
     const std::string help_message = fmt::format(
@@ -89,14 +93,14 @@ int main(int argc,
         {"test_app::paths", test_app::paths},
     };
 
-    // Get the first argument as a string
-    const std::string arg = argv[1];
+    // Get the test name from the command-line arguments
+    const std::string test_name = argv[1];
 
-    // If found in the map, run the test
-    if (const auto it = tests.find(arg); it != tests.cend()) {
+    // If the test name is found, run the corresponding test
+    if (const auto it = tests.find(test_name); it != tests.cend()) {
         return it->second();
     }
-    else if (arg == "all") {
+    else if (test_name == "all") {
         // Run all tests sequentially and print the results
         bool all_passed = true;
         for (const auto &[name, test_func] : tests) {
@@ -113,7 +117,7 @@ int main(int argc,
         return all_passed ? EXIT_SUCCESS : EXIT_FAILURE;
     }
     else {
-        fmt::print("Error: Invalid argument: {}\n\n{}\n", arg, help_message);
+        fmt::print(stderr, "Error: Invalid test name: '{}'\n\n{}\n", test_name, help_message);
         return EXIT_FAILURE;
     }
 }
