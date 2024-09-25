@@ -137,7 +137,8 @@ int main(int argc,
 int test_args::none()
 {
     try {
-        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME)};
+        char test_executable_name[] = TEST_EXECUTABLE_NAME;
+        char *fake_argv[] = {test_executable_name};
         core::args::Args(1, fake_argv);
         fmt::print(stderr, "core::args::Args() failed: missing arguments were not caught.\n");
         return EXIT_FAILURE;
@@ -151,7 +152,9 @@ int test_args::none()
 int test_args::invalid()
 {
     try {
-        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("hello")};
+        char test_executable_name[] = TEST_EXECUTABLE_NAME;
+        char arg_hello[] = "hello";
+        char *fake_argv[] = {test_executable_name, arg_hello};
         core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
         fmt::print(stderr, "core::args::Args() failed: invalid argument was not caught.\n");
@@ -184,18 +187,35 @@ int test_args::paths()
 
         // Store the string representation of the directory path
         const std::string temp_dir_str = temp_dir.get().string();
-        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>(temp_dir_str.c_str())};
+
+        // Create mutable copies of the strings
+        char test_executable_name[] = TEST_EXECUTABLE_NAME;
+
+        // Create a mutable character array for temp_dir_str
+        std::vector<char> temp_dir_cstr(temp_dir_str.cbegin(), temp_dir_str.cend());
+        temp_dir_cstr.emplace_back('\0');  // Ensure null-termination
+
+        // Build the argv array with mutable strings
+        char *fake_argv[] = {test_executable_name, temp_dir_cstr.data()};
         const core::args::Args args(2, fake_argv);
 
         // Compare the filepaths found by Args
         if (args.filepaths.size() != 2) {
-            fmt::print(stderr, "Filepaths test failed: expected 2, got {}: {}\n", args.filepaths.size(), fmt::join(core::string::paths_to_strings(args.filepaths), ", "));
+            fmt::print(stderr,
+                       "Filepaths test failed: expected 2, got {}: {}\n",
+                       args.filepaths.size(),
+                       fmt::join(core::string::paths_to_strings(args.filepaths), ", "));
             return EXIT_FAILURE;
         }
+
         // Iterate, because the order is not guaranteed
         for (const auto &path : args.filepaths) {
             if (path != temp_file1.string() && path != temp_file2.string()) {
-                fmt::print(stderr, "Filepaths test failed: expected '{}' or '{}', got {}\n", temp_file1.string(), temp_file2.string(), path.string());
+                fmt::print(stderr,
+                           "Filepaths test failed: expected '{}' or '{}', got {}\n",
+                           temp_file1.string(),
+                           temp_file2.string(),
+                           path.string());
                 return EXIT_FAILURE;
             }
         }
@@ -204,7 +224,7 @@ int test_args::paths()
         return EXIT_SUCCESS;
     }
     catch (const std::exception &e) {
-        fmt::print("core::args::Args() failed: {}\n", e.what());
+        fmt::print(stderr, "core::args::Args() failed: {}\n", e.what());
         return EXIT_FAILURE;
     }
 }
