@@ -125,9 +125,9 @@ int main(int argc,
 int test_args::none()
 {
     try {
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME};
-        core::args::Args(1, const_cast<char **>(fake_argv));
-        fmt::print(stderr, "core::args::Args() failed: no arguments weren't caught.\n");
+        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME)};
+        core::args::Args(1, fake_argv);
+        fmt::print(stderr, "core::args::Args() failed: missing arguments were not caught.\n");
         return EXIT_FAILURE;
     }
     catch (const core::args::ArgsError &) {
@@ -139,10 +139,10 @@ int test_args::none()
 int test_args::invalid()
 {
     try {
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, "hello"};
-        core::args::Args(2, const_cast<char **>(fake_argv));
+        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>("hello")};
+        core::args::Args(2, fake_argv);
         // This should never be reached, as the ArgsError exception should be thrown by the constructor
-        fmt::print("core::args::Args() failed: invalid argument wasn't caught.\n");
+        fmt::print(stderr, "core::args::Args() failed: invalid argument was not caught.\n");
         return EXIT_FAILURE;
     }
     catch (const core::args::ArgsError &e) {
@@ -172,8 +172,8 @@ int test_args::paths()
 
         // Store the string representation of the directory path
         const std::string temp_dir_str = temp_dir.get().string();
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_dir_str.c_str()};
-        const core::args::Args args(2, const_cast<char **>(fake_argv));
+        char *fake_argv[] = {const_cast<char *>(TEST_EXECUTABLE_NAME), const_cast<char *>(temp_dir_str.c_str())};
+        const core::args::Args args(2, fake_argv);
 
         // Compare the filepaths found by Args
         if (args.filepaths.size() != 2) {
