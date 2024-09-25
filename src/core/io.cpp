@@ -12,7 +12,7 @@
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 #include <locale>            // for setlocale, LC_ALL
-#include <windows.h>         // for WideCharToMultiByte, GetLastError, CP_UTF8, SetConsoleCP, SetConsoleOutputCP
+#include <windows.h>         // for CP_UTF8, SetConsoleCP, SetConsoleOutputCP, GetLastError
 #endif
 
 #include <fmt/core.h>
