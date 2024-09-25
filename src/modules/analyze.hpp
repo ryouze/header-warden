@@ -80,9 +80,9 @@ struct IncludeWithUnusedFunctions final : public core::io::Line {
 };
 
 /**
- * @brief Struct that represents a single unlisted standard function, i.e., a function used in the code but not listed as a comment after an include directive.
+ * @brief Struct that represents a single unlisted standard function, i.e., a function used in the code but not listed as a comment after any include directive.
  *
- * E.g., "std::sort()" is used in the code, but the include directive "#include <algorithm> // for std::find" is missing.
+ * E.g., "std::sort()" is used in the code, but the include directive "#include <algorithm> // for std::find" is missing "std::sort". It should be "#include <algorithm> // for std::find, std::sort".
  *
  * @note This struct is marked as `final` to prevent inheritance. All standard functions are stored with the "std::" prefix internally.
  */
@@ -110,6 +110,8 @@ struct UnlistedFunction final : public core::io::Line {
 
     /**
      * @brief Unlisted function that needs to be added to include comments, prefixed with "std::" (e.g., "std::sort").
+     *
+     * @note The "function" field stores the identifier name, which is the name of the function or object used from the "std" namespace.
      */
     const std::string function;
 
@@ -122,7 +124,12 @@ struct UnlistedFunction final : public core::io::Line {
 /**
  * @brief Class that extracts information from C++ code.
  *
- * On construction, the class loads the provided C++ file from disk, then extracts bare include directives (directives without any functions listed as comments), functions that are listed in comments but unused in the code, and functions that are used in the code but not listed as comments in any include directive. These results are accessible via getter functions.
+ * On construction, the class loads the provided C++ file from disk, then extracts:
+ * - Bare include directives (directives without any functions listed as comments).
+ * - Functions that are listed in comments but unused in the code.
+ * - Functions that are used in the code but not listed as comments in any include directive.
+ *
+ * These results are accessible via getter functions.
  *
  * @note This class is marked as `final` to prevent inheritance.
  */
