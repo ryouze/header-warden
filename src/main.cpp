@@ -33,11 +33,6 @@ int main(int argc,
         // Pass parsed command-line arguments to the application
         app::run(core::args::Args(argc, argv));
     }
-    catch (const core::args::ArgsError &e) {
-        // Failed to parse command-line arguments
-        fmt::print("{}\n", e.what());
-        return EXIT_SUCCESS;
-    }
     catch (const std::exception &e) {
         fmt::print(stderr, "{}\n", e.what());
         return EXIT_FAILURE;

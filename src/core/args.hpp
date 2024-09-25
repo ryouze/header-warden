@@ -14,7 +14,7 @@
 namespace core::args {
 
 /**
- * @brief Exceptions raised by command-line argument parser when help or version is requested. The requested message is returned.
+ * @brief Exceptions raised by command-line argument parser when an error occurs. A help message with usage, description, and examples is included.
  *
  * This class extends "std::runtime_error".
  *
