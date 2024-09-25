@@ -179,9 +179,15 @@ int test_args::paths()
         // Write to the files
         {
             std::ofstream ofs1(temp_file1);
+            if (!ofs1) {
+                throw std::runtime_error("Failed to open temp_file1 for writing");
+            }
             ofs1 << examples::badly_formatted;
 
             std::ofstream ofs2(temp_file2);
+            if (!ofs2) {
+                throw std::runtime_error("Failed to open temp_file2 for writing");
+            }
             ofs2 << examples::badly_formatted;
         }
 
@@ -239,6 +245,9 @@ int test_analyze::analyze_badly_formatted()
         const auto temp_file = temp_dir.get() / "badly_formatted.cpp";
         {
             std::ofstream f(temp_file);
+            if (!f) {
+                throw std::runtime_error("Failed to open temp_file for writing");
+            }
             f << examples::badly_formatted;
         }
 
@@ -292,6 +301,9 @@ int test_analyze::analyze_no_issues()
         const auto temp_file = temp_dir.get() / "no_issues.cpp";
         {
             std::ofstream f(temp_file);
+            if (!f) {
+                throw std::runtime_error("Failed to open temp_file for writing");
+            }
             f << examples::no_issues;
         }
 
@@ -337,6 +349,9 @@ int test_analyze::analyze_bare()
         const auto temp_file = temp_dir.get() / "bare.cpp";
         {
             std::ofstream f(temp_file);
+            if (!f) {
+                throw std::runtime_error("Failed to open temp_file for writing");
+            }
             f << examples::bare;
         }
 
@@ -385,6 +400,9 @@ int test_analyze::analyze_unused()
         const auto temp_file = temp_dir.get() / "unused.cpp";
         {
             std::ofstream f(temp_file);
+            if (!f) {
+                throw std::runtime_error("Failed to open temp_file for writing");
+            }
             f << examples::unused;
         }
 
@@ -435,6 +453,9 @@ int test_analyze::analyze_unlisted()
         const auto temp_file = temp_dir.get() / "unlisted.cpp";
         {
             std::ofstream f(temp_file);
+            if (!f) {
+                throw std::runtime_error("Failed to open temp_file for writing");
+            }
             f << examples::unlisted;
         }
 
@@ -485,6 +506,9 @@ int test_app::paths()
         const auto temp_file = temp_dir.get() / "paths.cpp";
         {
             std::ofstream f(temp_file);
+            if (!f) {
+                throw std::runtime_error("Failed to open temp_file for writing");
+            }
             f << examples::unlisted;
         }
 
