@@ -12,6 +12,8 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
+#include "modules/analyze.hpp"
+
 namespace helpers {
 
 /**
@@ -64,7 +66,6 @@ class TempDir final {
     const std::filesystem::path directory_;
 };
 
-// Compare and print functions
 [[nodiscard]] inline bool compare_and_print_bare_includes(const std::vector<modules::analyze::BareInclude> &program,
                                                           const std::vector<modules::analyze::BareInclude> &expected)
 {
@@ -80,9 +81,9 @@ class TempDir final {
         return false;
     }
 
-    fmt::print(stderr, "Bare include test succeeded.\n");
+    fmt::print("Bare include test succeeded.\n");
     for (const auto &entry : program) {
-        fmt::print(stderr, "  Line '{}': '{}', Include: '{}'\n", entry.number, entry.text, entry.header);
+        fmt::print("  Line '{}': '{}', Include: '{}'\n", entry.number, entry.text, entry.header);
     }
     return true;
 }
@@ -102,9 +103,9 @@ class TempDir final {
         return false;
     }
 
-    fmt::print(stderr, "Unused functions test succeeded.\n");
+    fmt::print("Unused functions test succeeded.\n");
     for (const auto &entry : program) {
-        fmt::print(stderr, "  Line '{}': '{}', Unused Functions: '{}'\n", entry.number, entry.text, fmt::join(entry.unused_functions, ", "));
+        fmt::print("  Line '{}': '{}', Unused Functions: '{}'\n", entry.number, entry.text, fmt::join(entry.unused_functions, ", "));
     }
     return true;
 }
@@ -124,9 +125,9 @@ class TempDir final {
         return false;
     }
 
-    fmt::print(stderr, "Unlisted functions test succeeded.\n");
+    fmt::print("Unlisted functions test succeeded.\n");
     for (const auto &entry : program) {
-        fmt::print(stderr, "  Line '{}': '{}', Function: '{}', Link: '{}'\n", entry.number, entry.text, entry.function, entry.link);
+        fmt::print("  Line '{}': '{}', Function: '{}', Link: '{}'\n", entry.number, entry.text, entry.function, entry.link);
     }
     return true;
 }
