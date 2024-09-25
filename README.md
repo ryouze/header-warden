@@ -85,9 +85,9 @@ This project has been tested on the following systems:
 Automated testing is also performed on the latest versions of macOS, GNU/Linux, and Windows using GitHub Actions.
 
 
-<!-- ## Pre-built Binaries
+## Pre-built Binaries
 
-Pre-built binaries are available for macOS (ARM64), GNU/Linux (x86_64), and Windows (x86_64). You can download the latest versions from the [Releases](../../releases) page. -->
+Pre-built binaries are available for macOS (ARM64), GNU/Linux (x86_64), and Windows (x86_64). You can download the latest versions from the [Releases](../../releases) page.
 
 
 ## Requirements
