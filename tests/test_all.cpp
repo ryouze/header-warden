@@ -183,7 +183,7 @@ int test_args::paths()
         // Iterate, because the order is not guaranteed
         for (const auto &path : args.filepaths) {
             if (path != temp_file1.string() && path != temp_file2.string()) {
-                fmt::print(stderr, "Filepaths test failed: expected {}, got {}\n", temp_file1.string(), path.string());
+                fmt::print(stderr, "Filepaths test failed: expected '{}' or '{}', got {}\n", temp_file1.string(), temp_file2.string(), path.string());
                 return EXIT_FAILURE;
             }
         }
