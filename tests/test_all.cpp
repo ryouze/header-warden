@@ -216,9 +216,9 @@ int test_args::paths()
 
         // Iterate, because the order is not guaranteed
         for (const auto &path : args.filepaths) {
-            if (path != temp_file1.string() && path != temp_file2.string()) {
+            if (!std::filesystem::equivalent(path, temp_file1) && !std::filesystem::equivalent(path, temp_file2)) {
                 fmt::print(stderr,
-                           "Filepaths test failed: expected '{}' or '{}', got {}\n",
+                           "Filepaths test failed: expected '{}' or '{}', got '{}'\n",
                            temp_file1.string(),
                            temp_file2.string(),
                            path.string());
@@ -512,12 +512,16 @@ int test_app::paths()
             f << examples::unlisted;
         }
 
-        // // Store the string representation of the file path
+        // Store the string representation of the file path
         const std::string temp_file_str = temp_file.string();
-        const char *fake_argv[] = {TEST_EXECUTABLE_NAME, temp_file_str.c_str()};
 
-        // Pass parsed command-line arguments to the application
-        app::run(core::args::Args(2, const_cast<char **>(fake_argv)));
+        // Create mutable copies of the strings
+        char test_executable_name[] = TEST_EXECUTABLE_NAME;
+        std::vector<char> temp_file_cstr(temp_file_str.cbegin(), temp_file_str.cend());
+        temp_file_cstr.emplace_back('\0');  // Ensure null-termination
+
+        char *fake_argv[] = {test_executable_name, temp_file_cstr.data()};
+        app::run(core::args::Args(2, fake_argv));
 
         fmt::print("test_app::paths() passed.\n");
         return EXIT_SUCCESS;
