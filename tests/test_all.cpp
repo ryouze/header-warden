@@ -241,7 +241,7 @@ int test_analyze::analyze_badly_formatted()
         // Create a temporary directory using RAII
         const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
-        // Create a temporary file with badly formatted code
+        // Create a temporary file
         const auto temp_file = temp_dir.get() / "badly_formatted.cpp";
         {
             std::ofstream f(temp_file);
@@ -297,7 +297,7 @@ int test_analyze::analyze_no_issues()
         // Create a temporary directory using RAII
         const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
-        // Create a temporary file with analyze_no_issues code
+        // Create a temporary file
         const auto temp_file = temp_dir.get() / "no_issues.cpp";
         {
             std::ofstream f(temp_file);
@@ -345,7 +345,7 @@ int test_analyze::analyze_bare()
         // Create a temporary directory using RAII
         const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
-        // Create a temporary file with analyze_no_issues code
+        // Create a temporary file
         const auto temp_file = temp_dir.get() / "bare.cpp";
         {
             std::ofstream f(temp_file);
@@ -396,7 +396,7 @@ int test_analyze::analyze_unused()
         // Create a temporary directory using RAII
         const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
-        // Create a temporary file with analyze_no_issues code
+        // Create a temporary file
         const auto temp_file = temp_dir.get() / "unused.cpp";
         {
             std::ofstream f(temp_file);
@@ -449,7 +449,7 @@ int test_analyze::analyze_unlisted()
         // Create a temporary directory using RAII
         const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
-        // Create a temporary file with analyze_unlisted code
+        // Create a temporary file
         const auto temp_file = temp_dir.get() / "unlisted.cpp";
         {
             std::ofstream f(temp_file);
@@ -502,7 +502,7 @@ int test_app::paths()
         // Create a temporary directory using RAII
         const helpers::TempDir temp_dir(std::filesystem::temp_directory_path() / TEST_EXECUTABLE_NAME);
 
-        // Create a temporary file with analyze_unlisted code
+        // Create a temporary file
         const auto temp_file = temp_dir.get() / "paths.cpp";
         {
             std::ofstream f(temp_file);
