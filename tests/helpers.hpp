@@ -66,6 +66,16 @@ class TempDir final {
     const std::filesystem::path directory_;
 };
 
+/**
+ * @brief Compare program-generated bare includes with expected bare includes.
+ *
+ * This also prints the results to the console.
+ *
+ * @param program Program-generated bare includes.
+ * @param expected Expected bare includes.
+ *
+ * @return True if the program-generated bare includes match the expected bare includes, false otherwise.
+ */
 [[nodiscard]] inline bool compare_and_print_bare_includes(const std::vector<modules::analyze::BareInclude> &program,
                                                           const std::vector<modules::analyze::BareInclude> &expected)
 {
@@ -88,6 +98,16 @@ class TempDir final {
     return true;
 }
 
+/**
+ * @brief Compare program-generated unused functions with expected unused functions.
+ *
+ * This also prints the results to the console.
+ *
+ * @param program Program-generated unused functions.
+ * @param expected Expected unused functions.
+ *
+ * @return True if the program-generated unused functions match the expected unused functions, false otherwise.
+ */
 [[nodiscard]] inline bool compare_and_print_unused_functions(const std::vector<modules::analyze::IncludeWithUnusedFunctions> &program,
                                                              const std::vector<modules::analyze::IncludeWithUnusedFunctions> &expected)
 {
@@ -110,6 +130,16 @@ class TempDir final {
     return true;
 }
 
+/**
+ * @brief Compare program-generated unlisted functions with expected unlisted functions.
+ *
+ * This also prints the results to the console.
+ *
+ * @param program Program-generated unlisted functions.
+ * @param expected Expected unlisted functions.
+ *
+ * @return True if the program-generated unlisted functions match the expected unlisted functions, false otherwise.
+ */
 [[nodiscard]] inline bool compare_and_print_unlisted_functions(const std::vector<modules::analyze::UnlistedFunction> &program,
                                                                const std::vector<modules::analyze::UnlistedFunction> &expected)
 {
