@@ -22,13 +22,7 @@ namespace core::args {
  */
 class ArgsError final : public std::runtime_error {
   public:
-    /**
-     * @brief Construct a new ArgsError object.
-     *
-     * @param message Error message that describes the cause of the exception (e.g., "Failed to load data").
-     */
-    explicit ArgsError(const std::string &message)
-        : std::runtime_error(message) {}
+    using std::runtime_error::runtime_error;
 };
 
 /**
