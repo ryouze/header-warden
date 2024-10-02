@@ -1,5 +1,8 @@
 # header-warden
 
+[![CI](https://github.com/ryouze/header-warden/actions/workflows/ci.yml/badge.svg)](https://github.com/ryouze/header-warden/actions/workflows/ci.yml)
+[![Release](https://github.com/ryouze/header-warden/actions/workflows/release.yml/badge.svg)](https://github.com/ryouze/header-warden/actions/workflows/release.yml)
+
 header-warden is a cross-platform CLI tool that identifies and reports missing standard library headers in C++ code.
 
 
@@ -87,7 +90,7 @@ Automated testing is also performed on the latest versions of macOS, GNU/Linux, 
 
 ## Pre-built Binaries
 
-Pre-built binaries are available for macOS (ARM64), GNU/Linux (x86_64), and Windows (x86_64). You can download the latest versions from the [Releases](../../releases) page.
+Pre-built binaries are available for macOS (ARM64), GNU/Linux (x86_64), and Windows (x86_64). You can download the latest version from the [Releases](../../releases) page.
 
 
 ## Requirements
