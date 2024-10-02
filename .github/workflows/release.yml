@@ -53,7 +53,7 @@ jobs:
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           -DCMAKE_BUILD_TYPE=Release
-          -DPROJECT_VERSION=${{ github.ref_name }}
+          -DPROJECT_VERSION="${{ github.ref_name }}"
           -S ${{ github.workspace }}
 
       - name: Build
