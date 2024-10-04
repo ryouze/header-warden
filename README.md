@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/ryouze/header-warden/actions/workflows/ci.yml/badge.svg)](https://github.com/ryouze/header-warden/actions/workflows/ci.yml)
 [![Release](https://github.com/ryouze/header-warden/actions/workflows/release.yml/badge.svg)](https://github.com/ryouze/header-warden/actions/workflows/release.yml)
+![Release version](https://img.shields.io/github/v/release/ryouze/header-warden)
 
 header-warden is a cross-platform CLI tool that identifies and reports missing standard library headers in C++ code.
 
