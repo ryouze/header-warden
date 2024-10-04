@@ -27,7 +27,9 @@ int main(int argc,
     try {
 #if defined(_WIN32)
         // Setup UTF-8 input/output on Windows (does nothing on other platforms)
-        core::io::setup_utf8_console();
+        if (const auto e = core::io::setup_utf8_console(); e.has_value()) {
+            fmt::print(stderr, "Warning: {}\n", *e);
+        }
 #endif
 
         // Pass parsed command-line arguments to the application
