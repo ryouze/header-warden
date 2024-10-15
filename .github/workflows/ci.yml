@@ -4,12 +4,10 @@ name: CI
 
 on:
   push:
-    branches: ["*"]  # Run on push for all branches
     paths-ignore:
       - "LICENSE"
       - "README.md"
   pull_request:
-    branches: ["*"]  # Run on pull requests for all branches
     paths-ignore:
       - "LICENSE"
       - "README.md"
