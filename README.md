@@ -93,7 +93,7 @@ Automated testing is also performed on the latest versions of macOS, GNU/Linux, 
 
 Pre-built binaries are available for macOS (ARM64), GNU/Linux (x86_64), and Windows (x86_64). You can download the latest version from the [Releases](../../releases) page.
 
-To remove macOS quarantine, use the following command:
+To remove macOS quarantine, use the following commands:
 
 ```sh
 xattr -d com.apple.quarantine header-warden-macos-arm64
