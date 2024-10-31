@@ -43,6 +43,15 @@ jobs:
         shell: bash
         run: |
           echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+          echo "deps-dir=${{ github.workspace }}/deps" >> "$GITHUB_OUTPUT"
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.strings.outputs.deps-dir }}
+          key: ${{ runner.os }}-deps-${{ hashFiles('CMakeLists.txt') }}-${{ hashFiles('cmake/**') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
