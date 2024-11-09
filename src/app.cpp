@@ -2,6 +2,11 @@
  * @file app.cpp
  */
 
+#include <filesystem>  // for std::filesystem
+#include <sstream>     // for std::ostringstream
+
+#include <BS_thread_pool.hpp>
+#include <BS_thread_pool_utils.hpp>
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
@@ -21,9 +26,13 @@ void run(const core::args::Args &args)
 
     fmt::print("--------------------------------------------------------------------------------\n\n");
 
-    // Process each filepath
-    for (const auto &path : args.filepaths) {
-        fmt::print("##- {} -##\n\n", path.string());
+    // Create a synced stream for thread-safe printing
+    BS::synced_stream sync_out;
+
+    // Function to process a single file
+    const auto process_file = [&args, &sync_out](const std::filesystem::path &path) {
+        std::ostringstream oss;
+        oss << fmt::format("##- {} -##\n\n", path.string());
         const modules::analyze::CodeParser parser(path);
 
         // Get references to the parser's extracted data / results
@@ -31,59 +40,90 @@ void run(const core::args::Args &args)
         const auto &unused_functions = parser.get_unused_functions();
         const auto &unlisted_functions = parser.get_unlisted_functions();
 
-        // Print bare includes
+        // Collect bare includes
         if (!bare_includes.empty()) {
-            fmt::print("-- 1) BARE INCLUDES --\n\n");
+            oss << fmt::format("-- 1) BARE INCLUDES --\n\n");
             if (args.enable.bare) {
-                for (const auto &entry : parser.get_bare_includes()) {
-                    fmt::print("{}| {}\n", entry.number, entry.text);
-                    fmt::print("-> Bare include directive.\n");
-                    fmt::print("-> Add a comment to '{}', e.g., '{} // for std::foo, std::bar'.\n\n", entry.header, entry.header);
+                for (const auto &entry : bare_includes) {
+                    oss << fmt::format("{}| {}\n", entry.number, entry.text);
+                    oss << fmt::format("-> Bare include directive.\n");
+                    oss << fmt::format("-> Add a comment to '{}', e.g., '{} // for std::foo, std::bar'.\n\n",
+                                       entry.header, entry.header);
                 }
             }
             else {
-                fmt::print("-> Disabled, but found {} bare include directives.\n\n", bare_includes.size());
+                oss << fmt::format("-> Disabled, but found {} bare include directives.\n\n",
+                                   bare_includes.size());
             }
         }
 
-        // Print unused functions
+        // Collect unused functions
         if (!unused_functions.empty()) {
-            fmt::print("-- 2) UNUSED FUNCTIONS --\n\n");
+            oss << fmt::format("-- 2) UNUSED FUNCTIONS --\n\n");
             if (args.enable.unused) {
-                for (const auto &entry : parser.get_unused_functions()) {
-                    fmt::print("{}| {}\n", entry.number, entry.text);
-                    fmt::print("-> Unused functions listed as comments.\n");
-                    fmt::print("-> Remove '{}' comments from '{}'.\n\n", fmt::join(entry.unused_functions, "', '"), entry.text);
+                for (const auto &entry : unused_functions) {
+                    oss << fmt::format("{}| {}\n", entry.number, entry.text);
+                    oss << fmt::format("-> Unused functions listed as comments.\n");
+                    oss << fmt::format("-> Remove '{}' comments from '{}'.\n\n",
+                                       fmt::join(entry.unused_functions, "', '"), entry.text);
                 }
             }
             else {
-                fmt::print("-> Disabled, but found {} unused functions.\n\n", unused_functions.size());
+                oss << fmt::format("-> Disabled, but found {} unused functions.\n\n",
+                                   unused_functions.size());
             }
         }
 
-        // Print unlisted functions
+        // Collect unlisted functions
         if (!unlisted_functions.empty()) {
-            fmt::print("-- 3) UNLISTED FUNCTIONS --\n\n");
+            oss << fmt::format("-- 3) UNLISTED FUNCTIONS --\n\n");
             if (args.enable.unlisted) {
-                for (const auto &entry : parser.get_unlisted_functions()) {
-                    fmt::print("{}| {}\n", entry.number, entry.text);
-                    fmt::print("-> Unlisted function.\n");
-                    fmt::print("-> Add '{}' as a comment, e.g., '#include <foo> // for {}'.\n",
-                               entry.function, entry.function);
-                    fmt::print("-> Reference: {}\n\n", entry.link);
+                for (const auto &entry : unlisted_functions) {
+                    oss << fmt::format("{}| {}\n", entry.number, entry.text);
+                    oss << fmt::format("-> Unlisted function.\n");
+                    oss << fmt::format("-> Add '{}' as a comment, e.g., '#include <foo> // for {}'.\n",
+                                       entry.function, entry.function);
+                    oss << fmt::format("-> Reference: {}\n\n", entry.link);
                 }
             }
             else {
-                fmt::print("-> Disabled, but found {} unlisted functions.\n\n", unlisted_functions.size());
+                oss << fmt::format("-> Disabled, but found {} unlisted functions.\n\n",
+                                   unlisted_functions.size());
             }
         }
 
-        // If nothing, found, print OK
+        // If nothing found, print OK
         if (bare_includes.empty() && unused_functions.empty() && unlisted_functions.empty()) {
-            fmt::print("-> OK.\n\n");
+            oss << "-> OK.\n\n";
         }
 
-        fmt::print("--------------------------------------------------------------------------------\n\n");
+        oss << "--------------------------------------------------------------------------------\n\n";
+
+        // Use synced stream to print the output
+        sync_out.print(oss.str());
+    };
+
+    if (args.filepaths.size() < 2) {
+        // Sequential processing for less than 2 files
+        for (const auto &path : args.filepaths) {
+            process_file(path);
+        }
+    }
+    else {
+        // Parallel processing for 2 or more files
+        // Create a thread pool
+        BS::thread_pool pool;
+
+        // Process each filepath in parallel
+        for (const auto &path : args.filepaths) {
+            // Submit a task to the thread pool
+            pool.detach_task([path, &process_file]() {
+                process_file(path);
+            });
+        }
+
+        // Wait for all tasks to complete
+        pool.wait();
     }
 }
 
