@@ -23,16 +23,22 @@ jobs:
             cpp_compiler: clang++
             input_name: header-warden
             output_name: header-warden-macos-arm64
+            archive_name: header-warden-macos-arm64.tar.gz
+            archive_type: tar
           - os: ubuntu-latest
             # c_compiler: gcc
             cpp_compiler: g++
             input_name: header-warden
             output_name: header-warden-linux-x86_64
+            archive_name: header-warden-linux-x86_64.tar.gz
+            archive_type: tar
           - os: windows-latest
             # c_compiler: cl
             cpp_compiler: cl
             input_name: Release/header-warden.exe  # Stored in a subdirectory on Windows
             output_name: header-warden-windows-x86_64.exe
+            archive_name: header-warden-windows-x86_64.zip
+            archive_type: zip
 
     steps:
       - uses: actions/checkout@v4
@@ -77,9 +83,17 @@ jobs:
           echo "Renaming '${{ matrix.input_name }}' to '${{ matrix.output_name }}'"
           mv "${{ matrix.input_name }}" "${{ matrix.output_name }}"
 
+      - name: Archive binary
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: ${{ matrix.archive_type }}
+          filename: "${{ matrix.archive_name }}"
+          directory: ${{ steps.strings.outputs.build-output-dir }}
+          path: ${{ matrix.output_name }}
+
       - name: Release
         # Upload the binary to the release page.
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.output_name }}
+          files: ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.archive_name }}
