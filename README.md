@@ -4,7 +4,7 @@
 [![Release](https://github.com/ryouze/header-warden/actions/workflows/release.yml/badge.svg)](https://github.com/ryouze/header-warden/actions/workflows/release.yml)
 ![Release version](https://img.shields.io/github/v/release/ryouze/header-warden)
 
-header-warden is a cross-platform CLI tool that identifies and reports missing standard library headers in C++ code.
+header-warden is a cross-platform multithreaded CLI tool that identifies and reports missing standard library headers in C++ code.
 
 
 ## Motivation
@@ -75,6 +75,7 @@ What you do with this information is completely up to you. You can choose to add
 - Written in modern C++ (C++17).
 - Comprehensive documentation with doxygen-style comments.
 - Automatic third-party dependency management using CMake's [FetchContent](https://www.foonathan.net/2022/06/cmake-fetchcontent/).
+- Multithreaded file processing via [BS::thread_pool](https://github.com/bshoshany/thread-pool).
 - No missing STL headers thanks to this tool (run on itself).
 
 
@@ -246,8 +247,8 @@ ctest --output-on-failure
 ## Credits
 
 - [argparse](https://github.com/p-ranav/argparse)
+- [BS::thread_pool](https://github.com/bshoshany/thread-pool)
 - [fmt](https://github.com/fmtlib/fmt)
-- [thread_pool](https://github.com/bshoshany/thread-pool)
 
 
 ## Contributing
