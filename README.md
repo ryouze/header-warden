@@ -211,11 +211,11 @@ header-warden ../src ~/dev/app/tests
 
 ### Multithreading
 
-When processing three or more files, multithreading is enabled, and results are printed asynchronously as each file is processed. For one or two files, multithreading is disabled to avoid unnecessary overhead. Note that if you pass a directory, more than two files may be found through recursive search, which will enable multithreading.
+When processing three or more files, multithreading is enabled, and results are printed asynchronously as each file is processed. For 1-2 files, multithreading is disabled to avoid unnecessary overhead. Please note that if you pass a directory, more than two files might be found through recursive search, which will enable multithreading.
 
-Within each file, however, the app analyzes lines sequentially, one at a time. While it’s technically possible to make this line-by-line analysis multithreaded, doing so would add significant complexity and overhead, as most files are analyzed in milliseconds (e.g., 25 ms in total for all files in this project). Only *exceptionally large files* (e.g., the 11.5MB header file containing embedded font data in my [aegyo](https://github.com/ryouze/aegyo) app, which even causes GitHub’s language detection to fail) might benefit from within-file multithreading. For 99% of files, however, this approach would actually *reduce* performance, making the current implementation more efficient for the expected use case.
+Within each file, however, the app analyzes lines sequentially, one at a time. While it’s technically possible to make this line-by-line analysis multithreaded, doing so would add significant complexity and overhead, as most files are analyzed in milliseconds (e.g., 25 ms in total for all files in this project). Only *exceptionally large files* (e.g., the 11.5MB `assets.cpp` file containing embedded Korean font data in my [aegyo](https://github.com/ryouze/aegyo) app) might benefit from within-file multithreading. For 99% of files, however, this approach would actually *reduce* performance, making the current implementation more efficient for the expected use case.
 
-With this in mind, large files will always appear at the end of the output due to their longer processing time, while results for smaller files are displayed immediately.
+With this in mind, large files always appear at the end of the output as they take longer to process, while results for smaller files are displayed immediately.
 
 
 ## Flags
