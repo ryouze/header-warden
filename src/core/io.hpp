@@ -21,7 +21,7 @@ namespace core::io {
 /**
  * @brief Setup UTF-8 input/output on Windows. Do nothing on other platforms.
  *
- * @return Error message if the setup fails, "std::nullopt" otherwise.
+ * @return Error message if the setup failed, "std::nullopt" otherwise.
  */
 [[nodiscard]] std::optional<std::string> setup_utf8_console();
 
