@@ -247,6 +247,7 @@ ctest --output-on-failure
 
 - [argparse](https://github.com/p-ranav/argparse)
 - [fmt](https://github.com/fmtlib/fmt)
+- [thread_pool](https://github.com/bshoshany/thread-pool)
 
 
 ## Contributing
