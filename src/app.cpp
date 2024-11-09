@@ -114,16 +114,19 @@ void run(const core::args::Args &args)
         // Create a thread pool
         BS::thread_pool pool;
 
+        // Collect futures in a BS::multi_future
+        BS::multi_future<void> futures;
+
         // Process each filepath in parallel
         for (const auto &path : args.filepaths) {
-            // Submit a task to the thread pool
-            pool.detach_task([path, &process_file]() {
+            // Submit a task to the thread pool and emplace the future
+            futures.emplace_back(pool.submit_task([path, &process_file]() {
                 process_file(path);
-            });
+            }));
         }
 
-        // Wait for all tasks to complete
-        pool.wait();
+        // Wait for all tasks to complete and rethrow exceptions
+        futures.get();
     }
 }
 
