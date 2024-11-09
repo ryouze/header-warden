@@ -42,11 +42,11 @@ void run(const core::args::Args &args)
 
         // Collect bare includes
         if (!bare_includes.empty()) {
-            oss << fmt::format("-- 1) BARE INCLUDES --\n\n");
+            oss << "-- 1) BARE INCLUDES --\n\n";
             if (args.enable.bare) {
                 for (const auto &entry : bare_includes) {
                     oss << fmt::format("{}| {}\n", entry.number, entry.text);
-                    oss << fmt::format("-> Bare include directive.\n");
+                    oss << "-> Bare include directive.\n";
                     oss << fmt::format("-> Add a comment to '{}', e.g., '{} // for std::foo, std::bar'.\n\n",
                                        entry.header, entry.header);
                 }
@@ -59,11 +59,11 @@ void run(const core::args::Args &args)
 
         // Collect unused functions
         if (!unused_functions.empty()) {
-            oss << fmt::format("-- 2) UNUSED FUNCTIONS --\n\n");
+            oss << "-- 2) UNUSED FUNCTIONS --\n\n";
             if (args.enable.unused) {
                 for (const auto &entry : unused_functions) {
                     oss << fmt::format("{}| {}\n", entry.number, entry.text);
-                    oss << fmt::format("-> Unused functions listed as comments.\n");
+                    oss << "-> Unused functions listed as comments.\n";
                     oss << fmt::format("-> Remove '{}' comments from '{}'.\n\n",
                                        fmt::join(entry.unused_functions, "', '"), entry.text);
                 }
@@ -76,11 +76,11 @@ void run(const core::args::Args &args)
 
         // Collect unlisted functions
         if (!unlisted_functions.empty()) {
-            oss << fmt::format("-- 3) UNLISTED FUNCTIONS --\n\n");
+            oss << "-- 3) UNLISTED FUNCTIONS --\n\n";
             if (args.enable.unlisted) {
                 for (const auto &entry : unlisted_functions) {
                     oss << fmt::format("{}| {}\n", entry.number, entry.text);
-                    oss << fmt::format("-> Unlisted function.\n");
+                    oss << "-> Unlisted function.\n";
                     oss << fmt::format("-> Add '{}' as a comment, e.g., '#include <foo> // for {}'.\n",
                                        entry.function, entry.function);
                     oss << fmt::format("-> Reference: {}\n\n", entry.link);
