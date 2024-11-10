@@ -32,10 +32,7 @@ function(fetch_and_link_external_dependencies target)
 
   FetchContent_Declare(
     thread_pool
-    GIT_REPOSITORY https://github.com/bshoshany/thread-pool.git
-    GIT_TAG        v4.1.0
-    GIT_PROGRESS   TRUE
-    GIT_SHALLOW    TRUE
+    URL https://github.com/bshoshany/thread-pool/archive/v4.1.0.zip
     EXCLUDE_FROM_ALL
     SYSTEM
   )
