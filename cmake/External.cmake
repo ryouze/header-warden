@@ -43,13 +43,12 @@ function(fetch_and_link_external_dependencies target)
   # Make dependencies available
   FetchContent_MakeAvailable(argparse fmt thread_pool)
 
-  # Link dependencies to the target
-  target_link_libraries(${target} PUBLIC argparse fmt::fmt)
+  # Create an INTERFACE library target for thread_pool
+  add_library(thread_pool INTERFACE)
+  target_include_directories(thread_pool INTERFACE ${thread_pool_SOURCE_DIR}/include)
 
-  # Add include directories for thread_pool
-  target_include_directories(${target} PUBLIC
-    ${thread_pool_SOURCE_DIR}/include
-  )
+  # Link dependencies to the target
+  target_link_libraries(${target} PUBLIC argparse fmt::fmt thread_pool)
 
   message(STATUS "[INFO] Linked dependencies 'argparse', 'fmt', and 'thread_pool' to target '${target}'.")
 endfunction()
