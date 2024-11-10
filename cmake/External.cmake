@@ -17,6 +17,7 @@ function(fetch_and_link_external_dependencies target)
     EXCLUDE_FROM_ALL
     SYSTEM
   )
+  
   FetchContent_Declare(
     fmt
     URL https://github.com/fmtlib/fmt/releases/download/11.0.2/fmt-11.0.2.zip
