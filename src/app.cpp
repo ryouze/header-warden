@@ -22,7 +22,8 @@ void run(const core::args::Args &args)
     fmt::print("Analyzing {} files: [{}]\n\n",
                args.filepaths.size(),
                fmt::join(core::string::paths_to_strings(args.filepaths), ", "));
-    // fmt::print("Enabled: bare={}, unused={}, unlisted={}\n\n", args.enable.bare, args.enable.unused, args.enable.unlisted);
+    // fmt::print("Enabled: bare={}, unused={}, unlisted={}, multithreading={}\n\n\n",
+    //            args.enable.bare, args.enable.unused, args.enable.unlisted, args.enable.multithreading);
 
     fmt::print("--------------------------------------------------------------------------------\n\n");
 
@@ -103,8 +104,9 @@ void run(const core::args::Args &args)
         sync_out.print(oss.str());
     };
 
-    if (args.filepaths.size() < 2) {
-        // Sequential processing for less than 2 files
+    if (args.filepaths.size() < 2 || !args.enable.multithreading) {
+        // Sequential processing for less than 2 files or if multithreading is disabled
+        // fmt::print("Processing files sequentially...\n\n");
         for (const auto &path : args.filepaths) {
             process_file(path);
         }
@@ -118,6 +120,7 @@ void run(const core::args::Args &args)
         BS::multi_future<void> futures;
 
         // Process each filepath in parallel
+        // fmt::print("Processing files in parallel...\n\n");
         for (const auto &path : args.filepaths) {
             // Submit a task to the thread pool and emplace the future
             futures.emplace_back(pool.submit_task([path, &process_file]() {

@@ -219,26 +219,29 @@ Within each file, however, the app analyzes lines sequentially, one at a time. W
 
 With this in mind, large files always appear at the end of the output as they take longer to process, while results for smaller files are displayed immediately.
 
+**Note:** The `--no-multithreading` flag can be used to disable multithreading altogether, regardless of the number of files being processed.
+
 
 ## Flags
 
 ```sh
 [~] $ header-warden --help
 Usage: header-warden [--help] [--version] [--no-bare] [--no-unused]
-                     [--no-unlisted]
+                     [--no-unlisted] [--no-multithreading]
                      paths...
 
 Identify and report missing headers in C++ code.
 
 Positional arguments:
-  paths          files or directories to process [nargs: 1 or more]
+  paths                files or directories to process [nargs: 1 or more]
 
 Optional arguments:
-  -h, --help     shows help message and exits
-  -v, --version  prints version information and exits
-  --no-bare      disables bare include directives
-  --no-unused    disables unused functions
-  --no-unlisted  disables unlisted functions
+  -h, --help           shows help message and exits
+  -v, --version        prints version information and exits
+  --no-bare            disables bare include directives
+  --no-unused          disables unused functions
+  --no-unlisted        disables unlisted functions
+  --no-multithreading  disables multithreading
 ```
 
 

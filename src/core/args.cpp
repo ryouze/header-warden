@@ -51,6 +51,10 @@ Args::Args(const int argc,
         .help("disables unlisted functions")
         .flag();
 
+    program.add_argument("--no-multithreading")
+        .help("disables multithreading")
+        .flag();
+
     try {
         program.parse_args(argc, argv);
     }
@@ -59,10 +63,12 @@ Args::Args(const int argc,
     }
 
     // Set enable's flags to true if the flag is not present
+    // I.e., the booleans are always true, unless the user provides the flag, such as "--no-multithreading"
     // This is faster, because "store_into()" would set the flag to false by default, so we'd need to invert it afterwards
     this->enable.bare = program["--no-bare"] == false;
     this->enable.unused = program["--no-unused"] == false;
     this->enable.unlisted = program["--no-unlisted"] == false;
+    this->enable.multithreading = program["--no-multithreading"] == false;
 
     // Process each path provided by the user
     for (const auto &filepath : files_or_directories) {

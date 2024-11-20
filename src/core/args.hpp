@@ -44,6 +44,11 @@ struct Enable final {
      * @brief If true, enable unlisted functions.
      */
     bool unlisted;
+
+    /**
+     * @brief If true, enable multithreading.
+     */
+    bool multithreading;
 };
 
 /**
@@ -74,7 +79,7 @@ class Args final {
     std::vector<std::filesystem::path> filepaths;
 
     /**
-     * @brief Struct of enabled features (e.g., "Enable(false, true, true)").
+     * @brief Struct of enabled features (e.g., "Enable(false, true, true, true)").
      */
     Enable enable;
 };
