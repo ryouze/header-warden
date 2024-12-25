@@ -19,21 +19,18 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            # c_compiler: clang
             cpp_compiler: clang++
             input_name: header-warden
             output_name: header-warden-macos-arm64
             archive_name: header-warden-macos-arm64.tar.gz
             archive_type: tar
           - os: ubuntu-latest
-            # c_compiler: gcc
             cpp_compiler: g++
             input_name: header-warden
             output_name: header-warden-linux-x86_64
             archive_name: header-warden-linux-x86_64.tar.gz
             archive_type: tar
           - os: windows-latest
-            # c_compiler: cl
             cpp_compiler: cl
             input_name: Release/header-warden.exe  # Stored in a subdirectory on Windows
             output_name: header-warden-windows-x86_64.exe
