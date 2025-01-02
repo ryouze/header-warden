@@ -141,28 +141,8 @@ Follow these steps to build the project:
     To compile the project, use the following command:
 
     ```sh
-    make
+    cmake --build . --parallel
     ```
-
-    If you want to use all available cores when compiling with `make`, you can pass the `-j` flag along with the number of cores available on your system:
-
-    - **macOS**:
-
-      ```sh
-      make -j$(sysctl -n hw.ncpu)
-      ```
-
-    - **GNU/Linux**:
-
-      ```sh
-      make -j$(nproc)
-      ```
-
-    - **8-core CPU**:
-
-      ```sh
-      make -j8
-      ```
 
 After successful compilation, you can run the program using `./header-warden`. However, it is highly recommended to install the program, so that it can be run from any directory. Refer to the [Install](#install) section below.
 
@@ -249,11 +229,11 @@ Optional arguments:
 
 Tests are included in the project but are not built by default.
 
-To enable and build the tests manually, run the following commands:
+To enable and build the tests manually, run the following commands from the `build` directory:
 
 ```sh
 cmake .. -DBUILD_TESTS=ON
-make
+cmake --build . --parallel
 ctest --output-on-failure
 ```
 
