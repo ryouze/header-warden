@@ -20,7 +20,7 @@ function(fetch_and_link_external_dependencies target)
 
   FetchContent_Declare(
     fmt
-    URL https://github.com/fmtlib/fmt/releases/download/11.1.1/fmt-11.1.1.zip
+    URL https://github.com/fmtlib/fmt/releases/download/11.0.2/fmt-11.0.2.zip
     DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     EXCLUDE_FROM_ALL
     SYSTEM
