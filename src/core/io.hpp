@@ -10,22 +10,8 @@
 #include <filesystem>  // for std::filesystem
 #include <string>      // for std::string
 #include <vector>      // for std::vector
-#if defined(_WIN32)
-#include <optional>  // for std::optional
-#endif
 
 namespace core::io {
-
-#if defined(_WIN32)
-
-/**
- * @brief Setup UTF-8 input/output on Windows. Do nothing on other platforms.
- *
- * @return Error message if the setup failed, "std::nullopt" otherwise.
- */
-[[nodiscard]] std::optional<std::string> setup_utf8_console();
-
-#endif
 
 /**
  * @brief Struct that represents a single line of text.

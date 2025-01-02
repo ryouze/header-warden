@@ -6,12 +6,13 @@
 #include <exception>  // for std::exception
 
 #include <fmt/core.h>
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
+#include <windows.h>         // for SetConsoleCP, SetConsoleOutputCP, CP_UTF8
+#endif
 
 #include "app.hpp"
 #include "core/args.hpp"
-#if defined(_WIN32)
-#include "core/io.hpp"
-#endif
 
 /**
  * @brief Entry-point of the application.
@@ -24,14 +25,11 @@
 int main(int argc,
          char **argv)
 {
-    try {
-#if defined(_WIN32)
-        // Setup UTF-8 input/output on Windows (does nothing on other platforms)
-        if (const auto e = core::io::setup_utf8_console(); e.has_value()) {
-            fmt::print(stderr, "Warning: {}\n", *e);
-        }
+#if defined(_WIN32)  // Setup UTF-8 input/output
+    SetConsoleCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
 #endif
-
+    try {
         // Pass parsed command-line arguments to the application
         app::run(core::args::Args(argc, argv));
     }

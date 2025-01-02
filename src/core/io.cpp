@@ -9,36 +9,12 @@
 #include <stdexcept>   // for std::runtime_error
 #include <string>      // for std::string, std::getline
 #include <vector>      // for std::vector
-#if defined(_WIN32)
-#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
-#include <locale>            // for setlocale, LC_ALL
-#include <optional>          // for std::optional, std::nullopt
-#include <windows.h>         // for CP_UTF8, SetConsoleCP, SetConsoleOutputCP, GetLastError
-#endif
 
 #include <fmt/core.h>
 
 #include "io.hpp"
 
 namespace core::io {
-
-#if defined(_WIN32)
-
-std::optional<std::string> setup_utf8_console()
-{
-#if defined(_WIN32)
-    if (!SetConsoleCP(CP_UTF8) || !SetConsoleOutputCP(CP_UTF8)) {
-        return fmt::format("Failed to set UTF-8 code page: {}", GetLastError());
-    }
-
-    if (!setlocale(LC_ALL, ".UTF8")) {
-        return "Failed to set UTF-8 locale";
-    }
-#endif
-    return std::nullopt;
-}
-
-#endif
 
 std::vector<Line> read_lines(const std::filesystem::path &input_path,
                              const std::size_t initial_capacity)
