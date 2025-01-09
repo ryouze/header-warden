@@ -2,7 +2,7 @@ include(FetchContent)
 
 function(fetch_and_link_external_dependencies target)
   if(NOT TARGET ${target})
-    message(FATAL_ERROR "[ERROR] Target '${target}' does not exist. Cannot fetch and link dependencies.")
+    message(FATAL_ERROR "Target '${target}' does not exist. Cannot fetch and link dependencies.")
   endif()
 
   set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
@@ -43,5 +43,5 @@ function(fetch_and_link_external_dependencies target)
   # Link dependencies to the target
   target_link_libraries(${target} PUBLIC argparse fmt::fmt thread_pool)
 
-  message(STATUS "[INFO] Linked dependencies 'argparse', 'fmt', and 'thread_pool' to target '${target}'.")
+  message(STATUS "Linked dependencies 'argparse', 'fmt', and 'thread_pool' to target '${target}'.")
 endfunction()
