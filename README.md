@@ -18,7 +18,8 @@ def foo(bar: typing.List[int]) -> None:
     pass
 ```
 
-**Note:** In [Python >=3.9](https://docs.python.org/3/whatsnew/3.9.html#type-hinting-generics-in-standard-collections), `list[]` can be used directly without using `typing.List`. This is merely for illustration purposes.
+> [!NOTE]
+> In [Python >=3.9](https://docs.python.org/3/whatsnew/3.9.html#type-hinting-generics-in-standard-collections), `list[]` can be used directly without using `typing.List`. This is merely for illustration purposes.
 
 
 However, in C++, it is possible to use a standard library function without including the corresponding header.
@@ -146,7 +147,8 @@ Follow these steps to build the project:
 
 After successful compilation, you can run the program using `./header-warden`. However, it is highly recommended to install the program, so that it can be run from any directory. Refer to the [Install](#install) section below.
 
-**Note:** The mode is set to `Release` by default. To build in `Debug` mode, use `cmake .. -DCMAKE_BUILD_TYPE=Debug`.
+> [!TIP]
+> The mode is set to `Release` by default. To build in `Debug` mode, use `cmake .. -DCMAKE_BUILD_TYPE=Debug`.
 
 
 ## Install
@@ -188,7 +190,8 @@ You can also pass multiple files and directories as arguments.
 header-warden ../src ~/dev/app/tests
 ```
 
-**Note:** On Windows, a modern terminal emulator like [Windows Terminal](https://github.com/microsoft/terminal) is recommended, although the default Command Prompt will display UTF-8 characters correctly.
+> [!NOTE]
+> On Windows, a modern terminal emulator like [Windows Terminal](https://github.com/microsoft/terminal) is recommended, although the default Command Prompt will display UTF-8 characters correctly.
 
 
 ### Multithreading
@@ -199,7 +202,8 @@ Within each file, however, the app analyzes lines sequentially, one at a time. W
 
 With this in mind, large files always appear at the end of the output as they take longer to process, while results for smaller files are displayed immediately.
 
-**Note:** The `--no-multithreading` flag can be used to disable multithreading altogether, regardless of the number of files being processed.
+> [!TIP]
+> The `--no-multithreading` flag can be used to disable multithreading altogether, regardless of the number of files being processed.
 
 
 ## Flags
