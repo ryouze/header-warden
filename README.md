@@ -190,7 +190,7 @@ You can also pass multiple files and directories as arguments.
 header-warden ../src ~/dev/app/tests
 ```
 
-> [!NOTE]
+> [!TIP]
 > On Windows, a modern terminal emulator like [Windows Terminal](https://github.com/microsoft/terminal) is recommended, although the default Command Prompt will display UTF-8 characters correctly.
 
 
