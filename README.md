@@ -80,6 +80,12 @@ What you do with this information is completely up to you. You can choose to add
 - No missing STL headers thanks to this tool (run on itself).
 
 
+### To-Do
+
+- [x] Add multi-threading.
+  - [ ] Double-check the [BS::thread_pool](https://github.com/bshoshany/thread-pool)'s documentation to ensure your usage is correct.
+
+
 ## Tested Systems
 
 This project has been tested on the following systems:
