@@ -28,7 +28,7 @@ function(fetch_and_link_external_dependencies target)
 
   FetchContent_Declare(
     thread_pool
-    URL https://github.com/bshoshany/thread-pool/archive/v4.1.0.zip
+    URL https://github.com/bshoshany/thread-pool/archive/v5.0.0.zip
     EXCLUDE_FROM_ALL
     SYSTEM
   )

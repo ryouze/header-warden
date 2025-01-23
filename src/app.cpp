@@ -6,7 +6,6 @@
 #include <sstream>     // for std::ostringstream
 
 #include <BS_thread_pool.hpp>
-#include <BS_thread_pool_utils.hpp>
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
