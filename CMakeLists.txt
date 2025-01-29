@@ -105,25 +105,32 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)
 
 # Strip symbols for Release builds
 if(CMAKE_BUILD_TYPE STREQUAL "Release" AND ENABLE_STRIP)
-	if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    # macOS, GNU/Linux
-		target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:-s>)
-		message(STATUS "Stripping symbols for Release build on macOS/Linux.")
-	elseif(MSVC)
+  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # macOS
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+      COMMAND strip -x $<TARGET_FILE:${PROJECT_NAME}>
+      COMMENT "Stripping local symbols for Release build on macOS."
+    )
+    message(STATUS "Stripping local symbols for Release build on macOS.")
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # GNU/Linux
+    target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:-s>)
+    message(STATUS "Stripping symbols for Release build on GNU/Linux.")
+  elseif(MSVC)
     # Windows (MSVC)
-		target_link_options(${PROJECT_NAME} PRIVATE /DEBUG:NONE /OPT:REF /OPT:ICF)
-		message(STATUS "Stripping symbols for Release build on MSVC.")
-	else()
-    # Probably Windows (MinGW) or something else
-    # I use MSVC in CI, so this setup is good enough for me
-		message(WARNING "Stripping not configured for this platform.")
-	endif()
+    # I use MSVC in CI/CD, so this is good enough for me
+    target_link_options(${PROJECT_NAME} PRIVATE /DEBUG:NONE /OPT:REF /OPT:ICF)
+    message(STATUS "Stripping symbols for Release build on MSVC.")
+  else()
+    # Other platforms, probably Windows (MinGW) or FreeBSD
+    message(WARNING "Stripping not configured for this platform.")
+  endif()
 else()
-	if(NOT ENABLE_STRIP)
-		message(STATUS "Symbol stripping is disabled by user.")
-	else()
-		message(STATUS "No stripping applied (non-Release build).")
-	endif()
+  if(NOT ENABLE_STRIP)
+    message(STATUS "Symbol stripping is disabled by user.")
+  else()
+    message(STATUS "No stripping applied (non-Release build).")
+  endif()
 endif()
 
 # Add install target
