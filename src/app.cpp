@@ -18,8 +18,9 @@ namespace app {
 
 void run(const core::args::Args &args)
 {
+    const std::size_t filepaths_len = args.filepaths.size();
     fmt::print("Analyzing {} files: [{}]\n\n",
-               args.filepaths.size(),
+               filepaths_len,
                fmt::join(core::string::paths_to_strings(args.filepaths), ", "));
     // fmt::print("Enabled: bare={}, unused={}, unlisted={}, multithreading={}\n\n\n",
     //            args.enable.bare, args.enable.unused, args.enable.unlisted, args.enable.multithreading);
@@ -27,6 +28,7 @@ void run(const core::args::Args &args)
     fmt::print("--------------------------------------------------------------------------------\n\n");
 
     // Create a synced stream for thread-safe printing
+    // Tip: Always create the "BS::synced_stream" object before the "BS::thread_pool" object to avoid crashes
     BS::synced_stream sync_out;
 
     // Function to process a single file
@@ -103,7 +105,7 @@ void run(const core::args::Args &args)
         sync_out.print(oss.str());
     };
 
-    if (args.filepaths.size() < 2 || !args.enable.multithreading) {
+    if (filepaths_len < 2 || !args.enable.multithreading) {
         // Sequential processing for less than 2 files or if multithreading is disabled
         // fmt::print("Processing files sequentially...\n\n");
         for (const auto &path : args.filepaths) {
@@ -112,22 +114,25 @@ void run(const core::args::Args &args)
     }
     else {
         // Parallel processing for 2 or more files
-        // Create a thread pool
+        // Create a thread pool with as many threads as are available in the hardware
         BS::thread_pool pool;
 
-        // Collect futures in a BS::multi_future
+        // Collect futures in a BS::multi_future, preallocating space for all filepaths
         BS::multi_future<void> futures;
+        futures.reserve(filepaths_len);
 
         // Process each filepath in parallel
         // fmt::print("Processing files in parallel...\n\n");
         for (const auto &path : args.filepaths) {
             // Submit a task to the thread pool and emplace the future
+            // Tip: "submit_task()" catches any exceptions thrown by the submitted task and forwards them to the corresponding future, which can be caught using the "get()" member function of the future object
             futures.emplace_back(pool.submit_task([&process_file, &path]() {
                 process_file(path);
             }));
         }
 
         // Wait for all tasks to complete and rethrow exceptions
+        // Tip: "wait()" does not throw any exceptions; only "get()" does, so even if your task does not return anything, i.e., your future is an "std::future<void>", you must still use "get()" on the future obtained from it if you want to catch exceptions thrown by it
         futures.get();
     }
 }
