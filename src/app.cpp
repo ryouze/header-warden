@@ -122,7 +122,7 @@ void run(const core::args::Args &args)
         // fmt::print("Processing files in parallel...\n\n");
         for (const auto &path : args.filepaths) {
             // Submit a task to the thread pool and emplace the future
-            futures.emplace_back(pool.submit_task([path, &process_file]() {
+            futures.emplace_back(pool.submit_task([&process_file, &path]() {
                 process_file(path);
             }));
         }
