@@ -109,18 +109,18 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release" AND ENABLE_STRIP)
     # macOS
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
       COMMAND strip -x $<TARGET_FILE:${PROJECT_NAME}>
-      COMMENT "Stripping local symbols for Release build on macOS."
+      COMMENT "Stripping local symbols for Release builds on macOS."
     )
-    message(STATUS "Stripping local symbols for Release build on macOS.")
+    message(STATUS "Stripping local symbols for Release builds on macOS.")
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # GNU/Linux
     target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:-s>)
-    message(STATUS "Stripping symbols for Release build on GNU/Linux.")
+    message(STATUS "Stripping symbols for Release builds on GNU/Linux.")
   elseif(MSVC)
     # Windows (MSVC)
     # I use MSVC in CI/CD, so this is good enough for me
     target_link_options(${PROJECT_NAME} PRIVATE /DEBUG:NONE /OPT:REF /OPT:ICF)
-    message(STATUS "Stripping symbols for Release build on MSVC.")
+    message(STATUS "Stripping symbols for Release builds on MSVC.")
   else()
     # Other platforms, probably Windows (MinGW) or FreeBSD
     message(WARNING "Stripping not configured for this platform.")
@@ -129,7 +129,7 @@ else()
   if(NOT ENABLE_STRIP)
     message(STATUS "Symbol stripping is disabled by user.")
   else()
-    message(STATUS "No stripping applied (non-Release build).")
+    message(STATUS "No stripping applied (non-Release builds).")
   endif()
 endif()
 
