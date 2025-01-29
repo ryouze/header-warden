@@ -24,6 +24,7 @@ endif()
 # Project options
 option(BUILD_TESTS "Build tests" OFF)
 option(ENABLE_COMPILE_FLAGS "Enable compile flags" ON)
+option(ENABLE_STRIP "Enable symbol stripping for Release builds" ON)
 
 # Enforce out-of-source builds
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -101,6 +102,29 @@ fetch_and_link_external_dependencies(${PROJECT_NAME}-lib)
 # Add the main executable and link the library
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}-lib)
+
+# Strip symbols for Release builds
+if(CMAKE_BUILD_TYPE STREQUAL "Release" AND ENABLE_STRIP)
+	if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # macOS, GNU/Linux
+		target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:-s>)
+		message(STATUS "Stripping symbols for Release build on macOS/Linux.")
+	elseif(MSVC)
+    # Windows (MSVC)
+		target_link_options(${PROJECT_NAME} PRIVATE /DEBUG:NONE /OPT:REF /OPT:ICF)
+		message(STATUS "Stripping symbols for Release build on MSVC.")
+	else()
+    # Probably Windows (MinGW) or something else
+    # I use MSVC in CI, so this setup is good enough for me
+		message(WARNING "Stripping not configured for this platform.")
+	endif()
+else()
+	if(NOT ENABLE_STRIP)
+		message(STATUS "Symbol stripping is disabled by user.")
+	else()
+		message(STATUS "No stripping applied (non-Release build).")
+	endif()
+endif()
 
 # Add install target
 include(GNUInstallDirs)
