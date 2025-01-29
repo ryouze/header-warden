@@ -33,11 +33,11 @@ void foo(std::vector<int> bar)  // No error or warning is generated
 }
 ```
 
-This is because they all share the `std` namespace and headers (e.g., `#include <iostream>`) can include other headers (e.g., `#include <vector>`) internally. This, however, varies between compilers and platforms, which can lead to portability issues (i.e., code that compiles on one platform but not on another).
+This is because they all share the `std` namespace, and headers (e.g., `#include <iostream>`) can include other headers (e.g., `#include <vector>`) internally. This, however, varies between compilers and platforms, which can lead to portability issues (i.e., code that compiles on one platform but not on another).
 
 As a C++ programmer, you're supposed to memorize *which* standard library functions are included in *which* headers. If you're a perfectionist like me, this quickly becomes very tedious and error-prone.
 
-header-warden addresses this by encouraging the explicit listing of all standard library functions as comments in the `#include` directive. As a bonus, this also makes it easier to memorize the required headers for each function for beginners.
+header-warden addresses this by encouraging the explicit listing of all standard library functions as comments in the `#include` directive. As a bonus, this also makes it easier for beginners to memorize the required headers for each function.
 
 ```c++
 #include <algorithm>  // for std::find
@@ -45,7 +45,7 @@ header-warden addresses this by encouraging the explicit listing of all standard
 #include <vector>     // for std::vector
 ```
 
-After running header-warden, you will receive a report that lists all standard library functions used in your code, along with the corresponding `#include` directives. This will help you ensure that all standard library functions are correctly listed as comments after the `#include` directive. Links to [cppreference.com](https://en.cppreference.com/) are also provided for missing functions, which makes it easy to find the correct header.
+After running header-warden, you will receive a report that lists all standard library functions used in your code, along with the corresponding `#include` directives. This will help you ensure that all standard library functions are correctly listed as comments after the `#include` directive. Links to [cppreference.com](https://en.cppreference.com/) are also provided for missing functions, making it easy to find the correct header.
 
 ```
 -- 1) BARE INCLUDES --
@@ -68,7 +68,7 @@ After running header-warden, you will receive a report that lists all standard l
 -> Reference: https://duckduckgo.com/?sites=cppreference.com&q=std%3A%3Asort&ia=web
 ```
 
-What you do with this information is completely up to you. You can choose to add the missing functions to the comments, or you can ignore them. The goal is to make you aware of the potential issues in your code.
+What you do with this information is completely up to you. You can choose to add the missing functions to the comments, or you can ignore them. The goal is to make you aware of potential issues in your code.
 
 
 ## Features
