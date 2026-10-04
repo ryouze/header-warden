@@ -4,7 +4,10 @@
 [![Release](https://github.com/ryouze/header-warden/actions/workflows/release.yml/badge.svg)](https://github.com/ryouze/header-warden/actions/workflows/release.yml)
 ![Release version](https://img.shields.io/github/v/release/ryouze/header-warden)
 
-header-warden is a cross-platform, multithreaded CLI tool that identifies and reports missing standard library headers in C++ code.
+A cross-platform, multithreaded CLI tool that identifies and reports missing standard library headers in C++ code.
+
+> [!NOTE]
+> Modern C++ language servers such as `clangd`, which is used by editors like Zed, can detect missing and unused headers automatically. This app is more of a personal learning project.
 
 ## Motivation
 
